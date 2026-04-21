@@ -1,0 +1,2182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRMS — Grievance Redressal Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,500;0,700;1,300&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --navy:#0d1f3c;--navy-mid:#162d52;--navy-light:#1e3d6e;
+    --teal:#0b8f7a;--teal-light:#0db89d;--teal-faint:#e3f7f4;
+    --amber:#e8971e;--amber-faint:#fdf3e3;
+    --red:#d44b4b;--red-faint:#fdf0f0;
+    --green:#2e9e6b;--green-faint:#e8f7f0;
+    --purple:#7c3aed;--purple-light:#a78bfa;--purple-faint:#f5f3ff;
+    --gold:#f59e0b;--gold-faint:#fffbeb;
+    --slate:#64748b;--slate-light:#94a3b8;
+    --surface:#f8fafc;--white:#fff;--border:#e2e8f0;
+    --text:#1a2540;--text-muted:#64748b;
+    --shadow:0 1px 3px rgba(13,31,60,.08),0 4px 16px rgba(13,31,60,.06);
+    --shadow-lg:0 8px 32px rgba(13,31,60,.12)
+  }
+
+  /* ── THEME MOODS (9 Themes) ── */
+  [data-theme="dark-black"] {
+    --surface: #000000; --white: #121212; --border: #333333; --text: #f8fafc; --text-muted: #94a3b8;
+  }
+  [data-theme="navy-blue"] {
+    --surface: #091124; --white: #111b33; --border: #1e2d4a; --text: #f8fafc; --text-muted: #94a3b8;
+  }
+  [data-theme="dark-green"] {
+    --surface: #04140f; --white: #082119; --border: #11382a; --text: #f8fafc; --text-muted: #94a3b8;
+  }
+  [data-theme="grey"] {
+    --surface: #27272a; --white: #3f3f46; --border: #52525b; --text: #f8fafc; --text-muted: #d4d4d8;
+  }
+  [data-theme="light-green"] {
+    --surface: #f0fdf4; --white: #ffffff; --border: #bbf7d0; --text: #064e3b;
+  }
+  [data-theme="light-pink"] {
+    --surface: #fdf2f8; --white: #ffffff; --border: #fbcfe8; --text: #831843;
+  }
+  [data-theme="light-blue"] {
+    --surface: #eff6ff; --white: #ffffff; --border: #bfdbfe; --text: #1e3a8a;
+  }
+  [data-theme="light-orange"] {
+    --surface: #fff7ed; --white: #ffffff; --border: #fed7aa; --text: #7c2d12;
+  }
+
+  /* Dark Theme Resets */
+  body.app-is-dark .card, body.app-is-dark .stat-card, body.app-is-dark .login-box, 
+  body.app-is-dark .chat-panel, body.app-is-dark .modal, body.app-is-dark .nav-bar, 
+  body.app-is-dark #djSlideSidebar, body.app-is-dark .sb-nav {
+    background: var(--white) !important; border-color: var(--border) !important;
+  }
+  body.app-is-dark .login-right { background: var(--surface) !important; }
+  body.app-is-dark input, body.app-is-dark select, body.app-is-dark textarea,
+  body.app-is-dark .chat-input-area, body.app-is-dark .lang-bar, 
+  body.app-is-dark .menu-btn, body.app-is-dark .mic-btn, body.app-is-dark .sb-nav-btn, body.app-is-dark .role-tab {
+    background: var(--surface) !important; color: var(--text) !important; border-color: var(--border) !important;
+  }
+  body.app-is-dark .chat-msg.bot .bubble, body.app-is-dark .agent-step, 
+  body.app-is-dark .agent-insight, body.app-is-dark .agent-result,
+  body.app-is-dark .calc-result-card, body.app-is-dark .dj-calc-card, body.app-is-dark .news-card {
+    background: var(--surface) !important; color: var(--text) !important; border-color: var(--border) !important;
+  }
+  body.app-is-dark td, body.app-is-dark th, body.app-is-dark .detail-row { border-bottom-color: var(--border) !important; color: var(--text) !important; }
+  body.app-is-dark .role-tab.active { background: var(--surface) !important; color: var(--text) !important; border: 1px solid var(--border); }
+  body.app-is-dark .page-header h2, body.app-is-dark .card h2, body.app-is-dark .card strong,
+  body.app-is-dark .sb-slide-title, body.app-is-dark .stat-card .sc-value, body.app-is-dark h3,
+  body.app-is-dark .topbar-logo, body.app-is-dark .login-box h3, body.app-is-dark .file-item-name {
+    color: var(--text) !important;
+  }
+  body.app-is-dark .file-item, body.app-is-dark .upload-zone { background: var(--surface) !important; border-color: var(--border) !important; color: var(--text) !important; }
+  body.app-is-dark .sb-progress { background: var(--surface) !important; border-color: var(--border) !important;}
+  body.app-is-dark .nav-item:hover, body.app-is-dark .nav-item.active { color: var(--teal-light) !important; border-bottom-color: var(--teal-light) !important; }
+  body.app-is-dark .btn-secondary { background: var(--surface); color: var(--text); border-color: var(--border); }
+  body.app-is-dark .btn-secondary:hover { background: var(--border); }
+  body.app-is-dark [style*="background:white"], body.app-is-dark [style*="background: white"], body.app-is-dark [style*="background:#ffffff"] { background: var(--white) !important; color: var(--text) !important;}
+
+  body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--surface);color:var(--text);min-height:100vh; transition: background 0.4s ease, color 0.4s ease;}
+  .hidden{display:none!important}
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .18s ease}
+  .btn-primary{background:var(--teal);color:white}.btn-primary:hover{background:var(--teal-light);transform:translateY(-1px);box-shadow:0 4px 12px rgba(11,143,122,.3)}
+  .btn-secondary{background:white;color:var(--text);border:1.5px solid var(--border)}.btn-secondary:hover{background:var(--surface);border-color:var(--slate-light)}
+  .btn-ghost{background:transparent;color:var(--text-muted);border:none;padding:8px 14px}.btn-ghost:hover{background:var(--border);color:var(--text)}
+  .btn-sm{padding:7px 14px;font-size:13px}.btn-full{width:100%;justify-content:center}
+  .badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600}
+  .badge-pending{background:var(--amber-faint);color:#8a5a0a}.badge-open{background:#e8f0fe;color:#2b5fad}
+  .badge-inprogress{background:#eef2ff;color:#5b47d5}.badge-resolved{background:var(--green-faint);color:#196646}
+  .badge-rejected{background:var(--red-faint);color:#a03030}
+
+  /* ── LOGIN ── */
+  #loginScreen{min-height:100vh;display:flex}
+  .login-left{width:55%;background:var(--navy);display:flex;flex-direction:column;justify-content:space-between;padding:48px 56px;position:relative;overflow:hidden}
+  .login-left::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(11,143,122,.18) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(232,151,30,.12) 0%,transparent 50%);pointer-events:none}
+  .login-logo .logo-mark{width:48px;height:48px;background:var(--teal);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px; transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;}
+  .login-logo .logo-mark:hover{transform: scale(1.05);}
+  .login-logo .logo-mark svg{width:28px;height:28px;fill:white}
+  .login-logo h1{font-family:'Fraunces',serif;font-size:28px;font-weight:700;color:white}
+  .login-logo p{font-size:13px;color:rgba(255,255,255,.5);margin-top:4px}
+  .login-hero h2{font-family:'Fraunces',serif;font-size:42px;font-weight:300;color:white;line-height:1.25;margin-bottom:16px}
+  .login-hero h2 em{font-style:italic;color:var(--teal-light)}
+  .login-hero p{color:rgba(255,255,255,.55);font-size:15px;line-height:1.7;max-width:360px}
+  .login-stats{display:flex;gap:32px}
+  .stat-item .num{font-family:'Fraunces',serif;font-size:28px;font-weight:500;color:var(--amber)}
+  .stat-item .lbl{font-size:12px;color:rgba(255,255,255,.45);margin-top:2px}
+  .login-right{flex:1;display:flex;align-items:center;justify-content:center;padding:48px 40px;position:relative;}
+  .login-box{width:100%;max-width:400px}
+  .login-box h3{font-family:'Fraunces',serif;font-size:26px;font-weight:500;color:var(--text);margin-bottom:6px}
+  .login-box>p{color:var(--text-muted);font-size:14px;margin-bottom:32px}
+  .role-tabs{display:flex;background:var(--border);border-radius:10px;padding:4px;margin-bottom:28px;gap:2px}
+  .role-tab{flex:1;padding:9px 8px;border-radius:8px;border:none;background:transparent;font-family:inherit;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all .18s}
+  .role-tab.active{background:white;color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+  .form-group{margin-bottom:18px}
+  .form-group label{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:7px}
+  .form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px;color:var(--text);background:white;outline:none;transition:border-color .15s}
+  .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--teal)}
+  .form-group textarea{resize:vertical;min-height:90px}
+
+  /* ── PASSWORD FIELD ── */
+  .pw-wrap{position:relative;display:flex;align-items:center;}
+  .pw-wrap input{padding-right:44px;}
+  .pw-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--slate-light);padding:4px;border-radius:5px;display:flex;align-items:center;justify-content:center;transition:color .15s;}
+  .pw-eye:hover{color:var(--teal);}
+  .pw-eye svg{width:18px;height:18px;pointer-events:none;}
+
+  /* ── SAVE CREDENTIALS ── */
+  .save-creds-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;margin-top:-6px;}
+  .save-creds-label{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text-muted);user-select:none;}
+  .save-creds-label input[type="checkbox"]{width:15px;height:15px;accent-color:var(--teal);cursor:pointer;border-radius:3px;}
+  .save-creds-label:hover{color:var(--text);}
+  .clear-saved{font-size:12px;color:var(--slate-light);cursor:pointer;background:none;border:none;font-family:inherit;padding:2px 6px;border-radius:4px;transition:all .15s;}
+  .clear-saved:hover{color:var(--red);background:var(--red-faint);}
+  .saved-banner{display:none;align-items:center;gap:8px;padding:9px 13px;background:var(--teal-faint);border:1px solid rgba(11,143,122,.25);border-radius:8px;font-size:12px;color:#0a6b5f;margin-bottom:14px;animation:fadeInDown .3s ease;}
+  .saved-banner.show{display:flex;}
+  @keyframes fadeInDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+  .saved-banner svg{flex-shrink:0;width:16px;height:16px;fill:#0a6b5f;}
+
+  /* ── LOGIN ERRORS ── */
+  .input-error {
+    border-color: var(--red) !important;
+    background-color: var(--red-faint) !important;
+    animation: shake 0.4s ease-in-out;
+  }
+  .error-msg {
+    color: var(--red);
+    font-size: 13px;
+    margin-bottom: 16px;
+    display: none;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    animation: fadeInDown 0.3s ease;
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    50% { transform: translateX(6px); }
+    75% { transform: translateX(-6px); }
+  }
+
+  .login-footer{margin-top:20px;text-align:center;font-size:13px;color:var(--text-muted)}
+  .login-footer a{color:var(--teal);font-weight:600;cursor:pointer}
+  #registerPanel{display:none}
+
+  /* ── APP ── */
+  #appShell{display:none;min-height:100vh;flex-direction:column}
+  .topbar{background:var(--navy);display:flex;align-items:center;padding:0 24px;height:60px;gap:16px;position:sticky;top:0;z-index:100}
+  .topbar-logo{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:white; transition: all 0.3s ease;}
+  .topbar-logo:hover{transform: scale(1.02);}
+  .topbar-logo .dot{width:8px;height:8px;background:var(--teal);border-radius:50%; transition: all 0.3s ease;}
+  .topbar-spacer{flex:1}
+  .topbar-user{display:flex;align-items:center;gap:10px;color:white;font-size:13px;cursor:pointer;padding:4px 8px;border-radius:8px;transition:background 0.2s;}
+  .topbar-user:hover{background:rgba(255,255,255,0.1);}
+  .avatar{width:34px;height:34px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;overflow:hidden;}
+  .avatar-img {width:100%; height:100%; object-fit:cover; border-radius:50%;}
+  .topbar-role{background:rgba(255,255,255,.1);color:rgba(255,255,255,.75);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;text-transform:uppercase}
+  .demo-badge{display:flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,.7);background:rgba(11,143,122,.25);padding:4px 10px;border-radius:20px;border:1px solid rgba(11,143,122,.4); cursor: pointer; transition: all 0.3s ease;}
+  .demo-badge .dot-g{width:7px;height:7px;border-radius:50%;background:#3fe0a0;animation:blink 2s ease-in-out infinite}
+  .nav-bar{background:white;border-bottom:1px solid var(--border);display:flex;padding:0 24px;overflow-x:auto}
+  .nav-item{padding:14px 18px;font-size:14px;font-weight:500;color:var(--text-muted);border-bottom:2.5px solid transparent;cursor:pointer;white-space:nowrap;transition:all .15s;display:flex;align-items:center;gap:7px}
+  .nav-item:hover{color:var(--text)}.nav-item.active{color:var(--teal);border-bottom-color:var(--teal)}
+  .main-content{flex:1;padding:32px 24px;max-width:1200px;margin:0 auto;width:100%}
+  .page{display:none}.page.active{display:block;animation:fadeIn .25s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .page-header{margin-bottom:28px}
+  .page-header h2{font-family:'Fraunces',serif;font-size:28px;font-weight:500}
+  .page-header p{color:var(--text-muted);font-size:14px;margin-top:5px}
+  .card{background:white;border:1px solid var(--border);border-radius:14px;padding:24px}
+  .stat-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:28px}
+  .stat-card{background:white;border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:10px}
+  .stat-card .sc-label{font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
+  .stat-card .sc-value{font-family:'Fraunces',serif;font-size:32px;font-weight:500;color:var(--text);line-height:1}
+  .stat-card .sc-sub{font-size:12px;color:var(--text-muted)}
+  .stat-card .sc-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;align-self:flex-start}
+  .table-wrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse}
+  th{text-align:left;padding:10px 14px;font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--border);white-space:nowrap}
+  td{padding:13px 14px;font-size:14px;border-bottom:1px solid var(--border);vertical-align:middle}
+  tr:last-child td{border-bottom:none}tr:hover td{background:var(--surface)}
+  .file-form{max-width:760px}
+  .file-form .card-title{font-family:'Fraunces',serif;font-size:18px;font-weight:500;margin-bottom:24px}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .form-tip{background:var(--teal-faint);border-left:3px solid var(--teal);padding:12px 14px;border-radius:6px;font-size:13px;color:#0a6b5f;margin-bottom:20px}
+  .track-box{max-width:560px}
+  .track-result{margin-top:20px}
+  .timeline{margin-top:12px}
+  .tl-item{display:flex;gap:14px;padding-bottom:20px;position:relative}
+  .tl-item:not(:last-child)::after{content:'';position:absolute;left:14px;top:30px;width:2px;bottom:0;background:var(--border)}
+  .tl-dot{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;z-index:1}
+  .tl-dot.done{background:var(--green-faint);color:var(--green);border:2px solid var(--green)}
+  .tl-dot.current{background:var(--teal);color:white;border:2px solid var(--teal)}
+  .tl-dot.pending{background:white;color:var(--slate-light);border:2px solid var(--border)}
+  .tl-content{flex:1;padding-top:3px}
+  .tl-content strong{font-size:14px;font-weight:600;display:block;margin-bottom:2px}
+  .tl-content span{font-size:12px;color:var(--text-muted)}
+  .modal-backdrop{position:fixed;inset:0;background:rgba(13,31,60,.7);backdrop-filter:blur(3px);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px}
+  .modal{background:white;border-radius:16px;width:100%;max-width:620px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);animation:modalIn .2s ease}
+  @keyframes modalIn{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+  .modal-header{padding:22px 24px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start}
+  .modal-header h3{font-family:'Fraunces',serif;font-size:20px;font-weight:500}
+  .modal-body{padding:24px}.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px}
+  .detail-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px}
+  .detail-row:last-child{border-bottom:none}.detail-row .key{color:var(--text-muted);font-weight:500}
+
+  /* ── PROFILE PICTURE HOVER ── */
+  .profile-avatar-wrapper { position: relative; cursor: pointer; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .profile-avatar-wrapper:hover::after { content: '📷'; position: absolute; inset: 0; background: rgba(0,0,0,0.5); color: white; display:flex; align-items: center; justify-content: center; font-size: 24px; }
+
+  /* ── DJ-VISUAL ASSISTANT SPECIFIC BUTTONS (UPDATED to Light Red & Smaller) ── */
+  .dj-vis-btn {
+    background: linear-gradient(135deg, #fb7185 0%, #ef4444 100%);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+  .dj-vis-btn:hover {
+    transform: translateY(-1px) scale(1.03);
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+  }
+  .vid-chap-btn {
+    background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.2);
+    color: white; padding: 8px 16px; border-radius: 20px; cursor: pointer; white-space: nowrap; font-size: 13px; font-weight:600;
+    transition: all 0.2s;
+  }
+  .vid-chap-btn:hover { background: rgba(255,255,255,0.2); }
+  .vid-chap-btn.active { background: #38bdf8; border-color: #38bdf8; color: #082f49; }
+  .vid-controls-overlay {
+    position: absolute; top: 16px; right: 16px; z-index: 10;
+  }
+  .vid-controls-overlay select {
+    background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; outline: none;
+  }
+  .vid-controls-overlay select:focus { border-color: #38bdf8; }
+
+  /* ── EASTER EGG POPUP & HIGHLIGHTS ── */
+  .logo-mark.grms-highlight {
+    background-color: var(--amber) !important;
+    box-shadow: 0 0 20px rgba(232, 151, 30, 0.8) !important;
+    transform: scale(1.1);
+  }
+  .topbar-logo.grms-highlight {
+    color: var(--amber) !important;
+    text-shadow: 0 0 12px rgba(232, 151, 30, 0.6) !important;
+    transform: scale(1.05);
+  }
+  .topbar-logo.grms-highlight .dot {
+    background-color: var(--amber) !important;
+    box-shadow: 0 0 10px var(--amber) !important;
+  }
+  .datetime-display.grms-highlight {
+    color: var(--amber) !important;
+    text-shadow: 0 0 12px rgba(232, 151, 30, 0.6) !important;
+    transform: scale(1.02);
+  }
+  .demo-badge.grms-highlight {
+    background-color: var(--amber) !important;
+    box-shadow: 0 0 12px rgba(232, 151, 30, 0.6) !important;
+    color: white !important;
+    border-color: var(--amber) !important;
+    transform: scale(1.05);
+  }
+
+  .easter-egg-popup {
+    position: fixed;
+    background: var(--navy);
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s, transform 0.3s;
+    white-space: nowrap;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .easter-egg-popup.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── FILE UPLOAD ── */
+  .upload-zone{border:2px dashed var(--border);border-radius:12px;padding:28px 20px;text-align:center;cursor:pointer;transition:all .22s;background:var(--surface);position:relative;overflow:hidden}
+  .upload-zone:hover{border-color:var(--teal);background:var(--teal-faint)}
+  .upload-zone.dragging{border-color:var(--teal);background:var(--teal-faint);transform:scale(1.01);box-shadow:0 0 0 4px rgba(11,143,122,.1)}
+  .upload-zone-icon{font-size:36px;margin-bottom:10px;display:block}
+  .upload-zone p{font-size:14px;color:var(--text);margin-bottom:4px}
+  .upload-zone p strong{color:var(--teal)}
+  .upload-zone small{font-size:12px;color:var(--text-muted)}
+  .upload-formats{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .upload-format-tag{padding:3px 9px;background:white;border:1px solid var(--border);border-radius:12px;font-size:11px;font-weight:600;color:var(--text-muted)}
+  .file-list-wrap{margin-top:12px;display:flex;flex-direction:column;gap:6px}
+  .file-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:white;border:1px solid var(--border);border-radius:9px;font-size:13px;animation:fadeIn .2s ease}
+  .file-item-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+  .fi-img{background:#fef3c7}.fi-pdf{background:#fee2e2}.fi-doc{background:#dbeafe}.fi-vid{background:#ede9fe}.fi-def{background:#f1f5f9}
+  .file-item-info{flex:1;min-width:0}
+  .file-item-name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px}
+  .file-item-size{font-size:11px;color:var(--text-muted);margin-top:1px}
+  .file-item-remove{background:none;border:none;cursor:pointer;color:var(--slate-light);font-size:18px;padding:0 4px;line-height:1;flex-shrink:0;transition:color .15s;border-radius:4px}
+  .file-item-remove:hover{color:var(--red);background:var(--red-faint)}
+  .upload-counter{font-size:12px;color:var(--text-muted);margin-top:8px;font-weight:500}
+
+  /* ── CHAT BASE ── */
+  .chat-fab{position:fixed;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s cubic-bezier(.34,1.56,.64,1);z-index:300}
+  .chat-panel{position:fixed;background:white;border-radius:20px;box-shadow:0 20px 60px rgba(13,31,60,.18),0 4px 16px rgba(13,31,60,.1);z-index:299;display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--border);transform:scale(.85) translateY(20px);opacity:0;pointer-events:none;transition:all .3s cubic-bezier(.34,1.4,.64,1);transform-origin:bottom right}
+  .chat-panel.open{transform:scale(1) translateY(0);opacity:1;pointer-events:all}
+  .chat-messages{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
+  .chat-messages::-webkit-scrollbar{width:4px}.chat-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+  .chat-msg{display:flex;gap:8px;max-width:94%;animation:msgIn .25s ease}
+  @keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+  .chat-msg.user{align-self:flex-end;flex-direction:row-reverse}
+  .msg-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;flex-shrink:0;margin-top:2px;font-family:'Fraunces',serif}
+  .bubble{padding:10px 13px;border-radius:14px;font-size:13px;line-height:1.58;max-width:100%}
+  .chat-msg.bot .bubble{background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:3px 14px 14px 14px}
+  .chat-msg.user .bubble{color:white;border-radius:14px 3px 14px 14px}
+  .bubble ul,.bubble ol{padding-left:16px;margin-top:6px}.bubble li{margin-bottom:4px}
+  .bubble strong{font-weight:600}.bubble code{background:rgba(0,0,0,.07);padding:1px 5px;border-radius:4px;font-size:11px;font-family:monospace}
+  .msg-meta{display:flex;align-items:center;justify-content:flex-end;gap:4px;margin-top:4px;min-width:0}
+  .msg-time{font-size:10px;color:rgba(255,255,255,.55);white-space:nowrap}
+  .chat-msg.bot .msg-time{color:var(--slate-light)}
+  .ticks{font-size:11px;color:rgba(255,255,255,.5);line-height:1;transition:color .3s ease;letter-spacing:-2px}
+  .ticks.read{color:#4fc3f7}
+  .chat-msg.bot .ticks{display:none}
+  .typing-dots{display:flex;gap:5px;align-items:center;padding:10px 13px;background:var(--surface);border:1px solid var(--border);border-radius:3px 14px 14px 14px}
+  .typing-dots span{width:7px;height:7px;border-radius:50%;animation:bounce 1.2s ease infinite}
+  .typing-dots span:nth-child(2){animation-delay:.2s}.typing-dots span:nth-child(3){animation-delay:.4s}
+  @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+  .chat-input-area{padding:10px 12px;border-top:1px solid var(--border);display:flex;gap:6px;align-items:flex-end;background:white;flex-shrink:0}
+  .ac-wrap{flex:1;position:relative}
+  .chat-input-area textarea{width:100%;border:1.5px solid var(--border);border-radius:12px;padding:9px 13px;font-family:inherit;font-size:13px;color:var(--text);background:white;outline:none;resize:none;max-height:80px;line-height:1.4;min-height:38px;transition:border-color .15s}
+  .chat-input-area textarea:focus{border-color:var(--teal)}
+  .send-btn{width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+  .send-btn:hover{transform:scale(1.05)}.send-btn:disabled{background:var(--border)!important;cursor:not-allowed;transform:none}
+  .chat-powered{text-align:center;font-size:10px;color:var(--slate-light);padding:0 14px 8px;flex-shrink:0}
+
+  /* ── MENUBAR & MIC BUTTONS ── */
+  .mic-btn, .menu-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;background:white;color:var(--text-muted);transition:all .2s;flex-shrink:0}
+  .mic-btn:hover{background:var(--teal-faint);border-color:var(--teal);color:var(--teal)}
+  .menu-btn:hover{background:var(--teal-faint);border-color:var(--teal);color:var(--teal)}
+  #sdjMenuBtn:hover{background:var(--purple-faint) !important;border-color:var(--purple) !important;color:var(--purple) !important}
+  
+  .mic-btn.listening{background:var(--red);border-color:var(--red);color:white;animation:micPulse .75s ease-in-out infinite}
+  @keyframes micPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+
+  .lang-bar{display:flex;align-items:center;gap:6px;padding:7px 14px;border-bottom:1px solid var(--border);background:#fafbff;flex-shrink:0}
+  .lang-bar-label{font-size:10px;color:var(--text-muted);font-weight:600;letter-spacing:.3px;text-transform:uppercase;margin-right:2px}
+  .lang-btn{padding:3px 9px;border-radius:12px;border:1.5px solid var(--border);background:white;font-size:11px;font-weight:700;cursor:pointer;color:var(--text-muted);transition:all .15s;font-family:inherit}
+  .lang-btn:hover{border-color:var(--teal);color:var(--teal)}
+  .lang-btn.active{background:var(--teal);color:white;border-color:var(--teal)}
+  .lang-bar-sep{color:var(--border);font-size:12px}
+  .lang-bar-spacer{flex:1}
+  .lang-bar-note{font-size:10px;color:var(--slate-light);font-style:italic}
+  .news-card{background:white;border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin:3px 0;font-size:12px}
+  .news-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px}
+  .news-card-title{font-weight:700;font-size:12.5px;color:var(--text);line-height:1.4;flex:1}
+  .news-tag{padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700;background:var(--teal-faint);color:var(--teal);white-space:nowrap;flex-shrink:0}
+  .news-meta{font-size:11px;color:var(--text-muted);margin-bottom:4px}
+  .news-summary{font-size:12px;color:var(--text-muted);line-height:1.5}
+  .sdj-news-tag{background:var(--purple-faint);color:var(--purple)}
+
+  /* ── AGENTIC CARDS ── */
+  .agent-step{background:linear-gradient(135deg,#faf5ff,#fffbeb);border:1px solid rgba(124,58,237,.15);border-radius:10px;padding:10px 12px;margin:2px 0;font-size:12px;animation:agentIn .3s ease}
+  @keyframes agentIn{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:translateX(0)}}
+  .agent-step-header{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+  .agent-step-icon{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+  .agent-step-title{font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--purple)}
+  .agent-step-body{color:var(--text-muted);font-size:11.5px;line-height:1.5}
+  .agent-step-body strong{color:var(--text)}
+  .agent-result{background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:1.5px solid rgba(46,158,107,.3);border-radius:10px;padding:10px 12px;margin:2px 0;font-size:12px;animation:agentIn .3s ease}
+  .agent-insight{background:linear-gradient(135deg,#fffbeb,#fff7ed);border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:10px 12px;margin:2px 0;font-size:12px;animation:agentIn .3s ease;color:#78350f}
+  .agent-insight strong{color:#92400e}
+  .agent-data-table{width:100%;border-collapse:collapse;margin-top:6px;font-size:11.5px}
+  .agent-data-table th{text-align:left;padding:6px 8px;background:rgba(124,58,237,.08);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--purple);border-bottom:1px solid rgba(124,58,237,.15)}
+  .agent-data-table td{padding:6px 8px;border-bottom:1px solid rgba(124,58,237,.08);color:var(--text);vertical-align:middle}
+  .agent-data-table tr:last-child td{border-bottom:none}
+  .agent-data-table tr:hover td{background:rgba(124,58,237,.04)}
+  .agent-action-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:8px;background:var(--purple);color:white;font-size:11px;font-weight:700;cursor:pointer;border:none;font-family:inherit;margin-top:6px;margin-right:4px;transition:all .15s}
+  .agent-action-btn:hover{background:#6d28d9;transform:translateY(-1px)}
+  .agent-action-btn.secondary{background:white;color:var(--purple);border:1.5px solid rgba(124,58,237,.3)}
+  .agent-action-btn.secondary:hover{background:var(--purple-faint)}
+
+  /* ── DJ ── */
+  #djFab{bottom:28px;right:28px;width:62px;height:62px;background:linear-gradient(135deg,#0b8f7a 0%,#0d1f3c 100%);box-shadow:0 6px 24px rgba(11,143,122,.45),0 2px 8px rgba(13,31,60,.2);overflow:hidden}
+  #djFab:hover{transform:scale(1.1) translateY(-2px)}#djFab.open{background:linear-gradient(135deg,#d44b4b 0%,#8b2020 100%)}
+  .dj-pulse{position:absolute;width:62px;height:62px;border-radius:50%;border:2px solid rgba(11,143,122,.4);animation:pulseRing 2s ease-out infinite;pointer-events:none}
+  @keyframes pulseRing{0%{transform:scale(1);opacity:1}100%{transform:scale(1.6);opacity:0}}
+  #djFab.open .dj-pulse{display:none}
+  #djPanel{bottom:104px;right:28px;width:380px;height:600px}
+  .dj-header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);padding:16px 18px;display:flex;align-items:center;gap:12px;position:relative;overflow:hidden;flex-shrink:0}
+  .dj-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(11,143,122,.25) 0%,transparent 65%);pointer-events:none}
+  .dj-hav{width:44px;height:44px;background:linear-gradient(135deg,var(--teal) 0%,#065e50 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;box-shadow:0 2px 10px rgba(11,143,122,.4);z-index:1}
+  .dj-hav-text{font-size:16px;font-weight:800;color:white;font-family:'Fraunces',serif}
+  .online-dot{position:absolute;bottom:1px;right:1px;width:11px;height:11px;background:#3fe0a0;border-radius:50%;border:2px solid var(--navy);animation:blink 2s ease-in-out infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
+  .dj-header-info{flex:1;position:relative;z-index:1}
+  .dj-header-info h4{font-family:'Fraunces',serif;font-size:17px;font-weight:700;color:white}
+  .dj-header-info p{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
+  .header-icon-btn{background:rgba(255,255,255,.15);border:none;cursor:pointer;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.85);font-size:16px;transition:background .15s;position:relative;z-index:10;flex-shrink:0;line-height:1}
+  .header-icon-btn:hover{background:rgba(255,255,255,.3);color:white}
+  .quick-chips{padding:10px 12px;display:flex;gap:6px;flex-wrap:wrap;background:linear-gradient(to bottom,#f0f9f7,white);border-bottom:1px solid var(--border);flex-shrink:0}
+  .chip{padding:5px 10px;border-radius:20px;background:var(--teal-faint);color:var(--teal);font-size:11px;font-weight:600;cursor:pointer;border:1px solid rgba(11,143,122,.2);transition:all .15s;white-space:nowrap}
+  .chip:hover{background:var(--teal);color:white}
+  .dj-msg-av{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%)}
+  .dj-user-bubble{background:linear-gradient(135deg,var(--teal) 0%,#065e50 100%)}
+  #djSendBtn{background:var(--teal)}
+  .notif-badge{position:absolute;top:-2px;right:-2px;width:18px;height:18px;background:var(--amber);border-radius:50%;border:2px solid white;font-size:10px;font-weight:700;color:white;display:flex;align-items:center;justify-content:center}
+
+  /* ── S+DJ ── */
+  #sdjFab{bottom:104px;right:28px;width:58px;height:58px;background:linear-gradient(135deg,#7c3aed 0%,#f59e0b 100%);box-shadow:0 6px 28px rgba(124,58,237,.5),0 2px 8px rgba(245,158,11,.3);overflow:hidden}
+  #sdjFab:hover{transform:scale(1.12) translateY(-2px)}
+  #sdjFab.open{background:linear-gradient(135deg,#d44b4b 0%,#8b2020 100%)}
+  .sdj-pulse-ring{position:absolute;width:58px;height:58px;border-radius:50%;border:2px solid rgba(124,58,237,.45);animation:sdjPulse 2.2s ease-out infinite;pointer-events:none}
+  .sdj-pulse-ring:nth-child(2){animation-delay:.7s;border-color:rgba(245,158,11,.35)}
+  @keyframes sdjPulse{0%{transform:scale(1);opacity:1}100%{transform:scale(1.7);opacity:0}}
+  #sdjFab.open .sdj-pulse-ring{display:none}
+  #sdjPanel{bottom:176px;right:28px;width:430px;height:650px;border:1.5px solid rgba(124,58,237,.2)}
+  .sdj-header{padding:16px 18px;display:flex;align-items:center;gap:12px;position:relative;overflow:hidden;background:linear-gradient(135deg,#1a0a35 0%,#2d1060 40%,#78350f 100%);flex-shrink:0}
+  .sdj-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(124,58,237,.3) 0%,transparent 55%),radial-gradient(ellipse at 85% 30%,rgba(245,158,11,.25) 0%,transparent 50%);pointer-events:none}
+  .sdj-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(124,58,237,.6),rgba(245,158,11,.6),transparent);pointer-events:none}
+  .sdj-avatar-wrap{width:48px;height:48px;flex-shrink:0;position:relative;z-index:1}
+  .sdj-avatar-ring{position:absolute;inset:-3px;border-radius:50%;background:conic-gradient(from 0deg,#7c3aed,#f59e0b,#7c3aed);animation:spinRing 3s linear infinite;pointer-events:none}
+  .sdj-avatar-inner{position:absolute;inset:2px;border-radius:50%;background:linear-gradient(135deg,#4c1d95 0%,#78350f 100%);display:flex;align-items:center;justify-content:center}
+  .sdj-avatar-inner svg{width:22px;height:22px}
+  @keyframes spinRing{to{transform:rotate(360deg)}}
+  .sdj-online-dot{position:absolute;bottom:0;right:0;width:13px;height:13px;background:linear-gradient(135deg,#a78bfa,#fbbf24);border-radius:50%;border:2px solid #1a0a35;animation:blink 1.8s ease-in-out infinite;z-index:1}
+  .sdj-header-info{flex:1;position:relative;z-index:1}
+  .sdj-header-info h4{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:white}
+  .sdj-header-info h4 span{background:linear-gradient(90deg,#a78bfa,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .sdj-header-info p{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
+  .sdj-caps{display:flex;gap:5px;margin-top:6px}
+  .sdj-cap{padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.3px}
+  .sdj-cap.agentic{background:rgba(124,58,237,.3);color:#c4b5fd;border:1px solid rgba(124,58,237,.4)}
+  .sdj-cap.secure{background:rgba(245,158,11,.25);color:#fcd34d;border:1px solid rgba(245,158,11,.35)}
+  .sdj-cap.live{background:rgba(46,158,107,.25);color:#6ee7b7;border:1px solid rgba(46,158,107,.35)}
+  .sdj-quick-chips{padding:10px 12px;display:flex;gap:5px;flex-wrap:wrap;background:linear-gradient(to bottom,#faf5ff,white);border-bottom:1px solid rgba(124,58,237,.12);flex-shrink:0}
+  .sdj-chip{padding:5px 10px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap;background:var(--purple-faint);color:var(--purple);border:1px solid rgba(124,58,237,.2)}
+  .sdj-chip:hover{background:var(--purple);color:white}
+  .sdj-msg-av{background:linear-gradient(135deg,#4c1d95,#78350f)}
+  .sdj-user-bubble{background:linear-gradient(135deg,var(--purple) 0%,#4c1d95 100%)}
+  #sdjSendBtn{background:linear-gradient(135deg,var(--purple),var(--gold))}
+  .dj-calc-card{background:var(--teal-faint);border:1.5px solid var(--teal);border-radius:12px;padding:14px 16px;margin:4px 0}
+  .dj-calc-label{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#0a6b5f;margin-bottom:6px}
+  .dj-calc-value{font-size:22px;font-weight:700;color:#064e44;font-family:'Fraunces',serif;margin-bottom:4px}
+  .dj-calc-expr{font-size:11px;color:#0a6b5f;font-family:monospace}
+  .calc-result-card{background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border:1.5px solid #38bdf8;border-radius:12px;padding:14px 16px;margin:4px 0;font-size:13px}
+  .calc-result-label{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#0369a1;margin-bottom:6px}
+  .calc-result-value{font-size:22px;font-weight:700;color:#0c4a6e;font-family:'Fraunces',serif;margin-bottom:4px}
+  .calc-result-expr{font-size:11px;color:#0369a1;font-family:monospace}
+
+  /* ── TOAST ── */
+  #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--navy);color:white;padding:14px 20px;border-radius:10px;font-size:14px;font-weight:500;box-shadow:var(--shadow-lg);z-index:500;opacity:0;transition:all .3s ease;display:flex;align-items:center;gap:10px;white-space:nowrap}
+  #toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+  #toast .ticon{width:20px;height:20px;background:var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+  /* ════════════════════════════════════════
+     DJ+SLIDE IMAGE ASSISTANT SIDEBAR
+  ════════════════════════════════════════ */
+  #djSlideSidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100vh;
+    background: white;
+    border-left: 1px solid var(--border);
+    box-shadow: -4px 0 24px rgba(13,31,60,.1);
+    display: flex;
+    flex-direction: column;
+    z-index: 150;
+    transform: translateX(0);
+    transition: transform .3s cubic-bezier(.4,0,.2,1);
+  }
+  #djSlideSidebar.collapsed {
+    transform: translateX(100%);
+  }
+  .sb-header .header-icon-btn { width: 28px; height: 28px; font-size: 14px; }
+
+  /* Toggle tab on the left edge of sidebar */
+  .sidebar-toggle-tab {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 72px;
+    background: linear-gradient(180deg, var(--teal) 0%, var(--navy) 100%);
+    border-radius: 10px 0 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 151;
+    box-shadow: -3px 0 12px rgba(11,143,122,.3);
+    transition: right .3s cubic-bezier(.4,0,.2,1), background .2s;
+    writing-mode: vertical-rl;
+    font-size: 10px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    gap: 0;
+    border: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .sidebar-toggle-tab:hover {
+    background: linear-gradient(180deg, var(--teal-light) 0%, var(--navy-light) 100%);
+  }
+  #djSlideSidebar:not(.collapsed) ~ .sidebar-toggle-tab {
+    right: 300px;
+  }
+
+  /* Sidebar header */
+  .sb-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .sb-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 80% 50%, rgba(11,143,122,.2) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .sb-header-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--teal), #065e50);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+    position: relative;
+    z-index: 1;
+  }
+  .sb-header-info {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+  }
+  .sb-header-info h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    line-height: 1.2;
+  }
+  .sb-header-info p {
+    font-size: 10px;
+    color: rgba(255,255,255,.5);
+    margin-top: 2px;
+  }
+  .sb-close-btn {
+    background: rgba(255,255,255,.15);
+    border: none;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,.8);
+    font-size: 14px;
+    transition: background .15s;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    line-height: 1;
+  }
+  .sb-close-btn:hover { background: rgba(255,255,255,.3); color: white; }
+
+  /* Slide progress / dots */
+  .sb-progress {
+    padding: 10px 16px 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .sb-dots {
+    display: flex;
+    gap: 5px;
+    flex: 1;
+    justify-content: center;
+  }
+  .sb-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--border);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .sb-dot.active {
+    background: var(--teal);
+    width: 20px;
+    border-radius: 4px;
+  }
+  .sb-counter {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    min-width: 36px;
+    text-align: right;
+  }
+
+  /* Slide viewport */
+  .sb-slides-viewport {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+  .sb-slides-track {
+    display: flex;
+    height: 100%;
+    transition: transform .35s cubic-bezier(.4,0,.2,1);
+  }
+  .sb-slide {
+    min-width: 300px;
+    height: 100%;
+    overflow-y: auto;
+    padding: 18px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .sb-slide::-webkit-scrollbar { width: 4px; }
+  .sb-slide::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* Slide image area */
+  .sb-slide-image {
+    width: 100%;
+    height: 140px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 52px;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .sb-slide-image .img-bg-pattern {
+    position: absolute;
+    inset: 0;
+    opacity: .08;
+    font-size: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px;
+    overflow: hidden;
+  }
+  .sb-slide-image .img-main-icon {
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,.15));
+  }
+
+  /* Slide content */
+  .sb-slide-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+    align-self: flex-start;
+  }
+  .sb-slide-title {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .sb-slide-body {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    line-height: 1.65;
+  }
+  .sb-slide-body strong { color: var(--text); font-weight: 600; }
+  .sb-step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-top: 2px;
+  }
+  .sb-step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    font-size: 12px;
+    color: var(--text);
+  }
+  .sb-step-num {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--teal);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .sb-step-text { flex: 1; line-height: 1.5; }
+  .sb-tip-box {
+    background: var(--teal-faint);
+    border-left: 3px solid var(--teal);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: #0a6b5f;
+    line-height: 1.5;
+  }
+  .sb-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 2px;
+  }
+  .sb-chip-tag {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .sb-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    background: var(--teal);
+    color: white;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    align-self: flex-start;
+    transition: all .15s;
+    margin-top: 4px;
+  }
+  .sb-cta-btn:hover { background: var(--teal-light); transform: translateY(-1px); }
+  .sb-cta-btn.purple { background: var(--purple); }
+  .sb-cta-btn.purple:hover { background: #6d28d9; }
+
+  /* Stat row in slides */
+  .sb-stat-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 2px;
+  }
+  .sb-stat-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+  .sb-stat-box .sb-stat-num {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--teal);
+    line-height: 1;
+  }
+  .sb-stat-box .sb-stat-lbl {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 3px;
+    font-weight: 600;
+  }
+
+  /* Navigation buttons */
+  .sb-nav {
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--border);
+    background: white;
+    flex-shrink: 0;
+  }
+  .sb-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: white;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .15s;
+  }
+  .sb-nav-btn:hover:not(:disabled) {
+    background: var(--surface);
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+  .sb-nav-btn:disabled { opacity: .35; cursor: not-allowed; }
+  .sb-nav-btn.next {
+    background: var(--teal);
+    color: white;
+    border-color: var(--teal);
+  }
+  .sb-nav-btn.next:hover { background: var(--teal-light); border-color: var(--teal-light); }
+
+  /* When sidebar is open, pad the body so content isn't hidden */
+  body.sb-open #loginScreen,
+  body.sb-open #appShell {
+    padding-right: 300px;
+    transition: padding-right .3s cubic-bezier(.4,0,.2,1);
+  }
+  body:not(.sb-open) #loginScreen,
+  body:not(.sb-open) #appShell {
+    padding-right: 0;
+    transition: padding-right .3s cubic-bezier(.4,0,.2,1);
+  }
+
+  @media(max-width:768px){
+    .login-left{display:none}.login-right{padding:32px 20px}.form-row{grid-template-columns:1fr}
+    .main-content{padding:20px 16px}.topbar{padding:0 16px}
+    #djPanel,#sdjPanel{width:calc(100vw - 32px);right:16px}
+    #djFab{bottom:20px;right:16px}#sdjFab{bottom:96px;right:16px}
+    #djPanel{bottom:96px}#sdjPanel{bottom:168px}
+    #djSlideSidebar{width:260px}
+    body.sb-open #loginScreen,body.sb-open #appShell{padding-right:260px}
+    #djSlideSidebar:not(.collapsed) ~ .sidebar-toggle-tab{right:260px}
+    .sb-slide{min-width:260px}
+  }
+
+  /* ════════════════════════════════════════
+     ROLE-BASED THEMES & EMOTIONAL UI
+  ════════════════════════════════════════ */
+
+  /* Smooth transition when switching roles */
+  body { transition: background 0.4s ease; }
+
+  /* ── 1. STUDENT THEME (Trust, Calm, Empathy) ── */
+  body.theme-complainant { background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%); }
+  body.theme-complainant .page-header h2 { color: #0f172a; }
+  body.theme-complainant .card { box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05); border-top: 3px solid var(--teal); }
+
+  /* ── 2. ADMIN THEME (Authority, Analytical, Crisp - Light Mode) ── */
+  body.theme-admin { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); }
+  body.theme-admin .main-content .page-header h2 { color: #0f172a; }
+  body.theme-admin .main-content .page-header p { color: #64748b; }
+  body.theme-admin .card { background: #ffffff; border: 1px solid var(--border); border-top: 4px solid var(--purple); border-left: none; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); }
+  body.theme-admin .card h2, body.theme-admin .card strong { color: var(--navy); }
+  body.theme-admin .stat-card { border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+
+  /* ── 3. OFFICER THEME (Action, Urgency, Focus) ── */
+  body.theme-officer { background: linear-gradient(135deg, #f8fafc 0%, #fff7ed 100%); }
+  body.theme-officer .page-header h2 { color: #78350f; }
+  body.theme-officer .card { border-top: 3px solid var(--amber); box-shadow: 0 8px 24px rgba(245, 158, 11, 0.08); }
+
+  /* ── 4. FILE GRIEVANCE UX (Supportive, Guided) ── */
+  #pageFile .file-form .card { border: none; border-radius: 16px; background: linear-gradient(to bottom, #ffffff, #fafbff); box-shadow: 0 16px 40px rgba(11, 143, 122, 0.12); position: relative; overflow: hidden; }
+  #pageFile .file-form .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, var(--teal), #3fe0a0); }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { box-shadow: 0 0 0 4px var(--teal-faint); transform: translateY(-2px); transition: all 0.2s ease; }
+  .track-box .card { border-radius: 16px; box-shadow: 0 12px 30px rgba(13,31,60, 0.08); }
+</style>
+</head>
+<body class="sb-open" data-theme="light-white">
+
+<div id="loginScreen" style="display:flex; position: relative;">
+  <div class="login-left">
+    <div class="login-logo">
+      <div class="logo-mark" style="cursor: pointer;" onclick="showLocalReply(this, 'I will make sure this gets resolved quickly..👍🏻.')">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+      </div>
+      <h1>GRMS</h1><p>Grievance Redressal Management System</p>
+      <div class="datetime-display" style="cursor: pointer; margin-top: 10px; font-size: 13px; color: var(--teal-light); display: inline-block; transition: all 0.3s ease;" onclick="showLocalReply(this, 'I understand your time is valuable⌛')"></div>
+    </div>
+    <div class="login-hero">
+      <h2>Your voice<br>deserves to be <em>heard.</em></h2>
+      <p>A transparent, efficient platform for students and employees to submit grievances and track every step of their resolution.</p>
+    </div>
+    <div class="login-stats">
+      <div class="stat-item"><div class="num">1,240</div><div class="lbl">Grievances Filed</div></div>
+      <div class="stat-item"><div class="num">94%</div><div class="lbl">Resolution Rate</div></div>
+      <div class="stat-item"><div class="num">3.2d</div><div class="lbl">Avg. Resolution Time</div></div>
+    </div>
+  </div>
+  <div class="login-right">
+    
+    <div style="position:absolute; top:24px; right:32px; display:flex; gap:12px; align-items:center; z-index:100;">
+      <button class="header-icon-btn theme-toggle-btn" onclick="cycleTheme()" title="Theme: Light Theme" style="background:var(--surface); color:var(--text); border:1px solid var(--border); box-shadow:var(--shadow); cursor:pointer;">☀️</button>
+      <button id="djVisualFabLogin" class="dj-vis-btn" onclick="openVisualAssistant()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4zM14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2z"/></svg>
+        DJ+VISUAL
+      </button>
+    </div>
+
+    <div class="login-box" id="loginPanel">
+      <h3>Welcome back</h3><p>Sign in to your account to continue</p>
+      <div class="role-tabs">
+        <button class="role-tab active" onclick="setRole('complainant',this)">Student</button>
+        <button class="role-tab" onclick="setRole('admin',this)">Admin</button>
+        <button class="role-tab" onclick="setRole('officer',this)">Officer</button>
+      </div>
+      <div class="saved-banner" id="savedBanner">
+        <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+        <span>Saved credentials loaded — click <strong>Sign In</strong> to continue.</span>
+      </div>
+      <div class="form-group"><label>Username</label><input type="text" id="loginUser" placeholder="Enter your username" oninput="clearLoginError()"></div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="loginPass" placeholder="Enter your password" onkeydown="if(event.key==='Enter')doLogin()" oninput="clearLoginError()">
+          <button class="pw-eye" type="button" id="eyeBtn" onclick="togglePasswordVisibility()" title="Show / Hide password" aria-label="Toggle password visibility">
+            <svg id="eyeIconShow" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            <svg id="eyeIconHide" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="save-creds-row">
+        <label class="save-creds-label" for="saveCreds"><input type="checkbox" id="saveCreds">Remember my credentials</label>
+        <button class="clear-saved" id="clearSavedBtn" onclick="clearSavedCredentials()" style="display:none;" title="Remove saved login">✕ Clear saved</button>
+      </div>
+
+      <div id="loginErrorMsg" class="error-msg">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        <span id="loginErrorText">Incorrect username or password.</span>
+      </div>
+
+      <button class="btn btn-primary btn-full" onclick="doLogin()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>Sign In
+      </button>
+      <div style="margin-top:14px;padding:10px 14px;background:var(--amber-faint);border-radius:8px;font-size:12px;color:#7a5010;line-height:1.5;">
+        <strong>Demo:</strong> Student: <code>user/pass123</code> &nbsp;·&nbsp; Admin: <code>admin/admin123</code> &nbsp;·&nbsp; Officer: <code>officer/off123</code>
+      </div>
+      <div class="login-footer">New student? <a onclick="showRegister()">Register here</a></div>
+    </div>
+
+    <div class="login-box" id="registerPanel">
+      <h3>Create Account</h3><p>Register as a student to file grievances</p>
+      <div class="form-row">
+        <div class="form-group"><label>Full Name</label><input type="text" id="regName" placeholder="Your full name"></div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="regPhone" placeholder="Mobile number"></div>
+      </div>
+      <div class="form-group"><label>Email</label><input type="email" id="regEmail" placeholder="your@email.com"></div>
+      <div class="form-group"><label>Student ID</label><input type="text" id="regAadhaar" placeholder="Roll number / ID"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Username</label><input type="text" id="regUser" placeholder="Choose username"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="regPass" placeholder="Create password"></div>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="doRegister()">Register</button>
+      <div class="login-footer">Have an account? <a onclick="showLogin()">Sign in</a></div>
+    </div>
+  </div>
+</div>
+
+<div id="appShell">
+  <div class="topbar">
+    <div class="topbar-logo" style="cursor: pointer;" onclick="showLocalReply(this, 'I will make sure this gets resolved quickly..👍🏻.')"><div class="dot"></div>GRMS</div>
+    <div class="datetime-display" style="cursor: pointer; color: white; font-size: 13px; font-weight: 500; padding: 4px 10px; border-radius: 6px; background: rgba(255,255,255,0.1); transition: all 0.3s ease; margin-left: 8px;" onclick="showLocalReply(this, 'I understand your time is valuable⌛')"></div>
+    <div class="topbar-spacer"></div>
+
+    <button class="header-icon-btn theme-toggle-btn" onclick="cycleTheme()" title="Theme: Light Theme" style="background:rgba(255,255,255,0.1); border:none; cursor:pointer; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:16px; margin-right:12px;">☀️</button>
+
+    <button id="djVisualFabApp" class="dj-vis-btn btn-sm" style="margin-right:12px;" onclick="openVisualAssistant()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4zM14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2z"/></svg>
+      DJ+VISUAL
+    </button>
+
+    <div class="topbar-user" onclick="showPage('profile')" title="Go to Profile">
+      <div class="demo-badge" onclick="event.stopPropagation(); showLocalReply(this, 'AI Driven🤖: 24/7 Grievance Support..🙏🏻')"><span class="dot-g"></span>AI Stream Sol</div>
+      <div id="topRole" class="topbar-role">Student</div>
+      <div id="topAvatar" class="avatar">U</div>
+      <span id="topName" style="font-size:13px;color:rgba(255,255,255,.8);">User</span>
+    </div>
+    
+    <button class="btn btn-ghost btn-sm" onclick="doLogout()" style="color:rgba(255,255,255,.6);margin-left:6px;" title="Logout">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>Logout
+    </button>
+  </div>
+  <div class="nav-bar" id="navBar"></div>
+  <div class="main-content">
+    <div id="pageDashboard" class="page">
+      <div class="page-header"><h2 id="dashTitle">Dashboard</h2><p id="dashSub">Overview</p></div>
+      <div class="stat-cards" id="dashStats"></div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+          <strong style="font-size:15px;">Recent Grievances</strong>
+          <button class="btn btn-secondary btn-sm" onclick="showPage('grievances')">View All</button>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Tracking ID</th><th>Category</th><th>Subject</th><th>Date</th><th>Status</th><th></th></tr></thead><tbody id="dashTableBody"></tbody></table></div>
+      </div>
+    </div>
+    <div id="pageFile" class="page">
+      <div class="page-header"><h2>File a Grievance</h2><p>Submit your complaint with accurate details for faster resolution</p></div>
+      <div class="file-form"><div class="card">
+        <div class="card-title">Grievance Details</div>
+        <div class="form-tip"><strong>💡 Tip:</strong> Provide accurate details and attach supporting evidence. A unique Tracking ID will be issued on submission.</div>
+        <div class="form-row">
+          <div class="form-group"><label>Category</label>
+            <select id="grCategory"><option value="">Select category...</option><option>Academic Issues</option><option>Examination</option><option>Fees &amp; Finance</option><option>Hostel &amp; Accommodation</option><option>Library</option><option>Transportation</option><option>Faculty Conduct</option><option>Infrastructure</option><option>Scholarships</option><option>Ragging / Harassment</option><option>Other</option></select>
+          </div>
+          <div class="form-group"><label>Priority</label><select id="grPriority"><option>Normal</option><option>Urgent</option><option>Critical</option></select></div>
+        </div>
+        <div class="form-group"><label>Subject</label><input type="text" id="grSubject" placeholder="Brief title of your grievance"></div>
+        <div class="form-group"><label>Department / Location</label><input type="text" id="grLocation" placeholder="Dept. / Block / Hostel / Area"></div>
+        <div class="form-group"><label>Description</label><textarea id="grDesc" rows="4" placeholder="Detailed description of the issue..."></textarea></div>
+        <div class="form-group">
+          <label>Supporting Documents &amp; Evidence <span style="font-weight:400;color:var(--text-muted);">(Optional · Max 5 files · 10 MB each)</span></label>
+          <div class="upload-zone" id="uploadZone" onclick="document.getElementById('grFileInput').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+            <input type="file" id="grFileInput" multiple accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.txt,.mp4,.mov,.avi,.xlsx,.xls" style="display:none" onchange="handleFileSelect(event)">
+            <span class="upload-zone-icon">📎</span>
+            <p>Drag &amp; drop files here, or <strong>click to browse</strong></p>
+            <small>Photos, Videos, PDFs, Documents — anything that supports your case</small>
+            <div class="upload-formats">
+              <span class="upload-format-tag">📸 JPG / PNG</span><span class="upload-format-tag">📄 PDF</span><span class="upload-format-tag">📝 DOC / DOCX</span><span class="upload-format-tag">🎥 MP4 / MOV</span><span class="upload-format-tag">📊 XLS / XLSX</span>
+            </div>
+          </div>
+          <div class="file-list-wrap" id="grFileList"></div>
+          <div class="upload-counter" id="uploadCounter" style="display:none"></div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:8px;">
+          <button class="btn btn-primary" onclick="submitGrievance()"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>Submit Grievance</button>
+          <button class="btn btn-secondary" onclick="resetFileForm()">Reset</button>
+        </div>
+      </div></div>
+    </div>
+    <div id="pageTrack" class="page">
+      <div class="page-header"><h2>Track Grievance</h2><p>Enter your Tracking ID to check real-time status</p></div>
+      <div class="track-box">
+        <div class="card">
+          <div class="form-group"><label>Tracking ID</label>
+            <div style="display:flex;gap:10px;"><input type="text" id="trackInput" placeholder="e.g. GRM-2024-001" style="flex:1;"><button class="btn btn-primary" onclick="trackGrievance()">Track</button></div>
+          </div>
+          <div id="trackResult" class="track-result hidden"></div>
+        </div>
+        <div style="margin-top:16px;" id="myGrievancesList">
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;font-weight:600;">YOUR SUBMITTED GRIEVANCES</p>
+          <div id="myGrList"></div>
+        </div>
+      </div>
+    </div>
+    <div id="pageGrievances" class="page">
+      <div class="page-header"><h2 id="grListTitle">All Grievances</h2><p id="grListSub">Manage and update grievance status</p></div>
+      <div class="card">
+        <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;">
+          <select id="filterStatus" onchange="renderGrievanceList()" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;background:white;"><option value="">All Statuses</option><option>Open</option><option>In Progress</option><option>Resolved</option><option>Rejected</option></select>
+          <select id="filterCat" onchange="renderGrievanceList()" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;background:white;"><option value="">All Categories</option><option>Academic Issues</option><option>Examination</option><option>Fees &amp; Finance</option><option>Hostel &amp; Accommodation</option><option>Library</option><option>Transportation</option><option>Faculty Conduct</option><option>Infrastructure</option><option>Scholarships</option><option>Ragging / Harassment</option><option>Other</option></select>
+          <div style="flex:1;"></div>
+          <button class="btn btn-secondary btn-sm" onclick="renderGrievanceList()">&#8635; Refresh</button>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>ID</th><th>Student</th><th>Category</th><th>Subject</th><th>Date</th><th>Files</th><th>Priority</th><th>Status</th><th>Action</th></tr></thead><tbody id="grListBody"></tbody></table></div>
+      </div>
+    </div>
+    <div id="pageReports" class="page">
+      <div class="page-header"><h2>Analytics &amp; Reports</h2><p>Monitor resolution rates and performance</p></div>
+      <div class="stat-cards">
+        <div class="stat-card"><div class="sc-icon" style="background:var(--teal-faint);"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--teal)"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg></div><div class="sc-label">Total Filed</div><div class="sc-value" id="rTotal">0</div></div>
+        <div class="stat-card"><div class="sc-icon" style="background:var(--green-faint);"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--green)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><div class="sc-label">Resolved</div><div class="sc-value" id="rResolved">0</div><div class="sc-sub" id="rResPct">0%</div></div>
+        <div class="stat-card"><div class="sc-icon" style="background:#eef2ff;"><svg width="18" height="18" viewBox="0 0 24 24" fill="#5b47d5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg></div><div class="sc-label">In Progress</div><div class="sc-value" id="rInProg">0</div></div>
+        <div class="stat-card"><div class="sc-icon" style="background:var(--amber-faint);"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--amber)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div><div class="sc-label">Pending</div><div class="sc-value" id="rPending">0</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div class="card"><strong style="font-size:14px;">Category Breakdown</strong><div id="catBreakdown" style="margin-top:16px;"></div></div>
+        <div class="card"><strong style="font-size:14px;">Monthly Trend</strong><div id="monthTrend" style="margin-top:16px;"></div></div>
+      </div>
+    </div>
+    <div id="pageNotifications" class="page">
+      <div class="page-header"><h2>Notifications</h2><p>Status updates and alerts</p></div>
+      <div class="card" style="max-width:600px;"><div id="notifList"></div></div>
+    </div>
+    <div id="pageProfile" class="page">
+      <div class="page-header"><h2>My Profile</h2><p>Manage your account information</p></div>
+      <div class="card" style="max-width:520px;">
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;">
+          <div class="avatar profile-avatar-wrapper" style="width:72px;height:72px;font-size:24px;" id="profileAvatar" onclick="document.getElementById('profilePicInput').click()" title="Change Profile Picture">U</div>
+          <input type="file" id="profilePicInput" style="display:none" accept="image/*" onchange="handleProfilePic(event)">
+          
+          <div><strong style="font-size:17px;" id="profileName">User</strong><p style="font-size:13px;color:var(--text-muted);" id="profileRole">Student</p></div>
+        </div>
+        <div id="profileDetails"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="detailModal" class="modal-backdrop hidden" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header"><div><h3 id="modalTitle">Grievance Details</h3><p style="font-size:13px;color:var(--text-muted);margin-top:4px;" id="modalId"></p></div><button class="btn btn-ghost btn-sm" onclick="document.getElementById('detailModal').classList.add('hidden')">&#10005;</button></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer" id="modalFooter"></div>
+  </div>
+</div>
+
+<div id="visualModal" class="modal-backdrop hidden" onclick="closeVisualModal(event)">
+  <div class="modal" style="max-width:760px; background:var(--navy); color:white; overflow:hidden;" onclick="event.stopPropagation()">
+    <div class="modal-header" style="border-bottom:1px solid rgba(255,255,255,0.1); padding: 16px 24px;">
+       <div>
+         <h3 style="color:white; display:flex; align-items:center; gap:8px;">
+           <svg width="24" height="24" viewBox="0 0 24 24" fill="#38bdf8"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4zM14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2z"/></svg>
+           DJ-Visual Assistant
+         </h3>
+         <p style="color:rgba(255,255,255,0.6); font-size:13px; margin-top:2px;">Interactive video guide with quality, speed, and subtitle controls.</p>
+       </div>
+       <button class="btn btn-ghost" style="color:white; padding:4px;" onclick="closeVisualModal()">&#10005;</button>
+    </div>
+    <div class="modal-body" style="padding:0; display:flex; flex-direction:column;">
+       <div style="position:relative; width:100%; background:#000;">
+          <video id="djVidPlayer" controls style="width:100%; max-height:420px; outline:none;" crossorigin="anonymous">
+             <source id="djVidSource" src="https://ak.picdn.net/shutterstock/videos/1027168676/preview/stock-footage-two-businessmen-shaking-hands-in-the-office-meeting-agreement.webm" type="video/webm">
+             <track label="English" kind="subtitles" srclang="en" src="data:text/vtt;charset=utf-8,WEBVTT%0A%0A1%0A00:00:00.000%20--%3E%2000:00:04.000%0AWelcome%20to%20the%20GRMS%20App%20Walkthrough.%0A%0A2%0A00:00:04.000%20--%3E%2000:00:10.000%0AHere%20you%20will%20learn%20how%20to%20use%20all%20features%20efficiently." default>
+          </video>
+          <div class="vid-controls-overlay">
+             <select id="vidQuality" onchange="changeVidQuality(this.value)" title="Change Quality">
+                <option value="1080">1080p HD</option>
+                <option value="720">720p HD</option>
+                <option value="480">480p</option>
+             </select>
+          </div>
+       </div>
+       <div style="padding:16px 20px; background:var(--navy-mid);">
+          <p style="font-size:12px; color:rgba(255,255,255,0.6); margin-bottom:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">Video Chapters</p>
+          <div style="display:flex; gap:10px; overflow-x:auto; padding-bottom:4px;">
+             <button class="vid-chap-btn active" onclick="playVidChapter('login', this)">🔑 Sign In & Register</button>
+             <button class="vid-chap-btn" onclick="playVidChapter('student', this)">🎓 Student Walkthrough</button>
+             <button class="vid-chap-btn" onclick="playVidChapter('admin', this)">🛡️ Admin View</button>
+             <button class="vid-chap-btn" onclick="playVidChapter('officer', this)">📋 Officer Duties</button>
+          </div>
+       </div>
+    </div>
+  </div>
+</div>
+
+<button id="djFab" class="chat-fab" onclick="toggleDJ()" title="DJ — Help Assistant">
+  <div class="dj-pulse"></div>
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-3 10H7v-2h10v2zm0-3H7V7h10v2z"/></svg>
+  <div class="notif-badge" id="djBadge">1</div>
+</button>
+<div id="djPanel" class="chat-panel">
+  <div class="dj-header">
+    <div class="dj-hav"><span class="dj-hav-text">DJ</span><div class="online-dot"></div></div>
+    <div class="dj-header-info"><h4>DJ — Assistant</h4><p>GRMS Help &amp; Support · Always Online</p></div>
+    <button class="header-icon-btn theme-toggle-btn" onclick="cycleTheme()" title="Theme: Light Theme">☀️</button>
+    <button class="header-close" id="djCloseBtn" title="Close">&#10005;</button>
+  </div>
+  <div class="lang-bar">
+    <span class="lang-bar-label">🌐 Lang</span>
+    <button class="lang-btn active" id="djLangEN" onclick="setLang('dj','en',this)">EN</button>
+    <span class="lang-bar-sep">|</span>
+    <button class="lang-btn" id="djLangHI" onclick="setLang('dj','hi',this)">हि</button>
+    <span class="lang-bar-sep">|</span>
+    <button class="lang-btn" id="djLangOR" onclick="setLang('dj','or',this)">ଓଡ଼ି</button>
+    <div class="lang-bar-spacer"></div>
+    <span class="lang-bar-note" id="djLangNote">English</span>
+  </div>
+  <div class="quick-chips" id="djChips">
+    <div class="chip" onclick="djChipSend('How do I file a grievance?')">📝 File Guide</div>
+    <div class="chip" onclick="djChipSend('What are the rules?')">📋 Rules</div>
+    <div class="chip" onclick="djChipSend('Resolution timeline?')">⏱️ Timeline</div>
+    <div class="chip" onclick="djChipSend('Ragging complaint')">🚨 Ragging</div>
+    <div class="chip" onclick="djChipSend('Calculate 15% of 50000')">🔢 Calc</div>
+    <div class="chip" onclick="showNews('dj','current')">📰 News</div>
+    <div class="chip" onclick="djChipSend('What documents can I attach?')">📎 Files</div>
+  </div>
+  <div class="chat-messages" id="djMessages"></div>
+  <div class="chat-input-area">
+    <button class="menu-btn" id="djMenuBtn" onclick="toggleDjChips()" title="Quick Options">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+    </button>
+    <button class="mic-btn" id="djMicBtn" onclick="toggleMic('dj')" title="Voice input">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16s-4.52-1.8-4.93-4.15c-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08c3.02-.43 5.42-2.78 5.91-5.78.1-.6-.39-1.14-1-1.14z"/></svg>
+    </button>
+    <div class="ac-wrap"><textarea id="djInput" placeholder="Ask DJ anything… or 'calculate 25 * 4'" rows="1" onkeydown="djKeyDown(event)" oninput="autoResize(this)"></textarea></div>
+    <button class="send-btn" id="djSendBtn" onclick="djSend()" style="background:var(--teal)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
+  <div class="chat-powered">💬 GRMS Assistant · Calculator + File Help + Voice · Always Available</div>
+</div>
+
+<button id="sdjFab" class="chat-fab" onclick="toggleSDJ()" title="S+DJ — Super Agent">
+  <div class="sdj-pulse-ring"></div><div class="sdj-pulse-ring"></div>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <defs><linearGradient id="sg1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#c4b5fd"/><stop offset="100%" style="stop-color:#fcd34d"/></linearGradient></defs>
+    <path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L14 2Z" fill="url(#sg1)" stroke="rgba(255,255,255,.3)" stroke-width=".5"/>
+  </svg>
+</button>
+<div id="sdjPanel" class="chat-panel">
+  <div class="sdj-header">
+    <div class="sdj-avatar-wrap">
+      <div class="sdj-avatar-ring"></div>
+      <div class="sdj-avatar-inner">
+        <svg viewBox="0 0 24 24" fill="none">
+          <defs><linearGradient id="sg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#c4b5fd"/><stop offset="100%" style="stop-color:#fcd34d"/></linearGradient></defs>
+          <path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L14 2Z" fill="url(#sg2)"/>
+        </svg>
+      </div>
+      <div class="sdj-online-dot"></div>
+    </div>
+    <div class="sdj-header-info">
+      <h4>S+DJ <span>Super Agent</span></h4>
+      <p>Agentic AI · Live Data · Smart Actions</p>
+      <div class="sdj-caps"><span class="sdj-cap agentic">⚡ AGENTIC</span><span class="sdj-cap secure">🔒 SECURE</span><span class="sdj-cap live">● LIVE</span></div>
+    </div>
+    <button class="header-icon-btn theme-toggle-btn" onclick="cycleTheme()" title="Theme: Light Theme">☀️</button>
+    <button class="header-close" id="sdjCloseBtn" title="Close">&#10005;</button>
+  </div>
+  <div class="lang-bar" style="background:#fdf8ff;border-bottom-color:rgba(124,58,237,.15);">
+    <span class="lang-bar-label" style="color:#7c3aed;">🌐 Lang</span>
+    <button class="lang-btn active" id="sdjLangEN" onclick="setLang('sdj','en',this)" style="border-color:rgba(124,58,237,.3);">EN</button>
+    <span class="lang-bar-sep">|</span>
+    <button class="lang-btn" id="sdjLangHI" onclick="setLang('sdj','hi',this)" style="border-color:rgba(124,58,237,.3);">हि</button>
+    <span class="lang-bar-sep">|</span>
+    <button class="lang-btn" id="sdjLangOR" onclick="setLang('sdj','or',this)" style="border-color:rgba(124,58,237,.3);">ଓଡ଼ି</button>
+    <div class="lang-bar-spacer"></div>
+    <span class="lang-bar-note" id="sdjLangNote">English</span>
+  </div>
+  <div class="sdj-quick-chips" id="sdjChips">
+    <div class="sdj-chip" onclick="sdjChipSend('Show my grievances and status')">📊 My Cases</div>
+    <div class="sdj-chip" onclick="sdjChipSend('Show critical and urgent cases')">🚨 Critical</div>
+    <div class="sdj-chip" onclick="sdjChipSend('Give me a full dashboard overview')">📈 Analytics</div>
+    <div class="sdj-chip" onclick="sdjChipSend('How can agentic AI help in grievance management?')">⚡ AI Demo</div>
+    <div class="sdj-chip" onclick="sdjChipSend('Calculate 18% GST on 25000')">🔢 Calc</div>
+    <div class="sdj-chip" onclick="sdjChipSend('Draft a complaint about hostel water supply')">✍️ Draft</div>
+    <div class="sdj-chip" onclick="sdjChipSend('What will S+DJ be able to do in the future?')">🔮 Future</div>
+  </div>
+  <div class="chat-messages" id="sdjMessages"></div>
+  <div class="chat-input-area" style="border-top:1px solid rgba(124,58,237,.15);">
+    <button class="menu-btn" id="sdjMenuBtn" onclick="toggleSdjChips()" title="Quick Options" style="border-color:rgba(124,58,237,.3); color: var(--purple);">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+    </button>
+    <button class="mic-btn" id="sdjMicBtn" onclick="toggleMic('sdj')" title="Voice input" style="border-color:rgba(124,58,237,.3);">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16s-4.52-1.8-4.93-4.15c-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08c3.02-.43 5.42-2.78 5.91-5.78.1-.6-.39-1.14-1-1.14z"/></svg>
+    </button>
+    <div class="ac-wrap"><textarea id="sdjInput" placeholder="Ask S+DJ anything — I query live data!" rows="1" onkeydown="sdjKeyDown(event)" oninput="autoResize(this)"></textarea></div>
+    <button class="send-btn" id="sdjSendBtn" onclick="sdjSend()" style="background:linear-gradient(135deg,var(--purple),var(--gold))">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
+  <div class="chat-powered" style="color:rgba(124,58,237,.5);">⚡ S+DJ Super Agent · Agentic AI · Live Data · Voice · Always Ready</div>
+</div>
+
+<div id="djSlideSidebar">
+
+  <div class="sb-header">
+    <div class="sb-header-icon">🖼️</div>
+    <div class="sb-header-info">
+      <h4>DJ+Slide Image Assistant</h4>
+      <p>7 Guides · GRMS Quick Reference</p>
+    </div>
+    <button class="header-icon-btn theme-toggle-btn" onclick="cycleTheme()" title="Theme: Light Theme">☀️</button>
+    <button class="sb-close-btn" onclick="toggleSidebar()" title="Close sidebar">✕</button>
+  </div>
+
+  <div class="sb-progress">
+    <div class="sb-dots" id="sbDots"></div>
+    <span class="sb-counter" id="sbCounter">1 / 7</span>
+  </div>
+
+  <div class="sb-slides-viewport">
+    <div class="sb-slides-track" id="sbTrack">
+
+      <div class="sb-slide">
+        <div class="sb-slide-image" style="background:linear-gradient(135deg,#e3f7f4,#f0f9ff);">
+          <div class="img-bg-pattern">📋📋📋📋📋📋📋📋📋📋📋📋📋📋📋📋</div>
+          <span class="img-main-icon">🎓</span>
+        </div>
+        <span class="sb-slide-tag" style="background:var(--teal-faint);color:var(--teal);">👋 Welcome</span>
+        <h3 class="sb-slide-title">Welcome to GRMS</h3>
+        <p class="sb-slide-body">The <strong>Grievance Redressal Management System</strong> gives every student and employee a clear, transparent way to raise concerns and track outcomes.</p>
+        <div class="sb-stat-row">
+          <div class="sb-stat-box"><div class="sb-stat-num">1,240</div><div class="sb-stat-lbl">Cases Filed</div></div>
+          <div class="sb-stat-box"><div class="sb-stat-num">94%</div><div class="sb-stat-lbl">Resolved</div></div>
+          <div class="sb-stat-box"><div class="sb-stat-num">3.2d</div><div class="sb-stat-lbl">Avg. Resolution</div></div>
+          <div class="sb-stat-box"><div class="sb-stat-num">11</div><div class="sb-stat-lbl">Categories</div></div>
+        </div>
+        <div class="sb-tip-box">Use the tabs below to navigate between slides and learn all you need to get started.</div>
+      </div>
+
+      <div class="sb-slide">
+        <div class="sb-slide-image" style="background:linear-gradient(135deg,#fff7ed,#fef3c7);">
+          <div class="img-bg-pattern">📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝</div>
+          <span class="img-main-icon">📝</span>
+        </div>
+        <span class="sb-slide-tag" style="background:var(--amber-faint);color:#8a5a0a;">📝 Filing</span>
+        <h3 class="sb-slide-title">How to File a Grievance</h3>
+        <div class="sb-step-list">
+          <div class="sb-step-item"><div class="sb-step-num">1</div><span class="sb-step-text">Click <strong>File Grievance</strong> in the top navigation</span></div>
+          <div class="sb-step-item"><div class="sb-step-num">2</div><span class="sb-step-text">Choose a <strong>Category</strong> and set the <strong>Priority</strong></span></div>
+          <div class="sb-step-item"><div class="sb-step-num">3</div><span class="sb-step-text">Fill in Subject, Location, and a detailed <strong>Description</strong></span></div>
+          <div class="sb-step-item"><div class="sb-step-num">4</div><span class="sb-step-text">Attach supporting <strong>evidence</strong> — photos, PDFs, videos</span></div>
+          <div class="sb-step-item"><div class="sb-step-num">5</div><span class="sb-step-text">Click <strong>Submit</strong> — your unique Tracking ID is issued instantly</span></div>
+        </div>
+        <button class="sb-cta-btn" onclick="showPage&&(showPage('file'),toggleSidebar())">📝 Go to File Grievance</button>
+      </div>
+
+      <div class="sb-slide">
+        <div class="sb-slide-image" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);">
+          <div class="img-bg-pattern">📎📎📎📎📎📎📎📎📎📎📎📎📎📎📎📎</div>
+          <span class="img-main-icon">📎</span>
+        </div>
+        <span class="sb-slide-tag" style="background:var(--green-faint);color:#196646;">📎 Attachments</span>
+        <h3 class="sb-slide-title">Evidence &amp; File Attachments</h3>
+        <p class="sb-slide-body">Attaching evidence makes your grievance <strong>3× more likely</strong> to be resolved quickly. Drag &amp; drop or click to upload.</p>
+        <div class="sb-chip-row">
+          <span class="sb-chip-tag">🖼️ JPG / PNG</span>
+          <span class="sb-chip-tag">📄 PDF</span>
+          <span class="sb-chip-tag">📝 DOC / DOCX</span>
+          <span class="sb-chip-tag">🎥 MP4 / MOV</span>
+          <span class="sb-chip-tag">📊 XLS / XLSX</span>
+        </div>
+        <div class="sb-tip-box"><strong>Limits:</strong> Up to <strong>5 files</strong> per submission · Max <strong>10 MB</strong> per file · Duplicates are auto-filtered.</div>
+      </div>
+
+      <div class="sb-slide">
+        <div class="sb-slide-image" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);">
+          <div class="img-bg-pattern">🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍</div>
+          <span class="img-main-icon">🔍</span>
+        </div>
+        <span class="sb-slide-tag" style="background:#e8f0fe;color:#2b5fad;">🔍 Tracking</span>
+        <h3 class="sb-slide-title">Track Your Grievance</h3>
+        <p class="sb-slide-body">Every submission gets a unique <strong>Tracking ID</strong> (e.g. GRM-2024-001). Use it to follow each step in real-time.</p>
+        <div class="sb-step-list">
+          <div class="sb-step-item"><div class="sb-step-num" style="background:#5b47d5;">●</div><span class="sb-step-text"><strong>Open</strong> — Received, awaiting acknowledgement</span></div>
+          <div class="sb-step-item"><div class="sb-step-num" style="background:var(--amber);">●</div><span class="sb-step-text"><strong>In Progress</strong> — Under active investigation</span></div>
+          <div class="sb-step-item"><div class="sb-step-num" style="background:var(--green);">●</div><span class="sb-step-text"><strong>Resolved</strong> — Issue addressed successfully</span></div>
+          <div class="sb-step-item"><div class="sb-step-num" style="background:var(--red);">●</div><span class="sb-step-text"><strong>Rejected</strong> — Not accepted (you may appeal)</span></div>
+        </div>
+        <button class="sb-cta-btn" onclick="showPage&&(showPage('track'),toggleSidebar())">🔍 Track Status Now</button>
+      </div>
+
+      <div class="sb-slide">
+        <div class="sb-slide-image" style="background:linear-gradient(135deg,#fdf4ff,#f3e8ff);">
+          <div class="img-bg-pattern">⏱️⏱️⏱️⏱️⏱️⏱️⏱️⏱️⏱️⏱️⏱️⏱️⏱️⏱️⏱️⏱️</div>
+          <span class="img-main-icon">⏱️</span>
+        </div>
+        <span class="sb-slide-tag" style="background:var(--purple-faint);color:var(--purple);">⏱️ Timelines</span>
+        <h3 class="sb-slide-title">Resolution Timelines</h3>
+        <div class="sb-step-list">
+          <div class="sb-step-item"><div class="sb-step-num" style="background:var(--teal);">✓</div><span class="sb-step-text"><strong>Acknowledgement</strong> — within 48 hours</span></div>
+          <div class="sb-step-item"><div class="sb-step-num" style="background:var(--teal);">✓</div><span class="sb-step-text"><strong>Officer Assignment</strong> — within 72 hours</span></div>
+          <div class="sb-step-item"><div class="sb-step-num" style="background:var(--teal);">✓</div><span class="sb-step-text"><strong>Normal</strong> — resolved within 15 days</span></div>
+          <div class="sb-step-item"><div class="sb-step-num" style="background:var(--amber);">!</div><span class="sb-step-text"><strong>Urgent</strong> — resolved within 7 days</span></div>
+          <div class="sb-step-item"><div class="sb-step-num" style="background:var(--red);">!!</div><span class="sb-step-text"><strong>Critical</strong> — resolved within 48–72 hours</span></div>
+        </div>
+        <div class="sb-tip-box">File within <strong>30 days</strong> of the incident. Anonymous complaints are not accepted.</div>
+      </div>
+
+      <div class="sb-slide">
+        <div class="sb-slide-image" style="background:linear-gradient(135deg,#fdf0f0,#fee2e2);">
+          <div class="img-bg-pattern">🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨</div>
+          <span class="img-main-icon">🚨</span>
+        </div>
+        <span class="sb-slide-tag" style="background:var(--red-faint);color:var(--red);">🚨 Safety</span>
+        <h3 class="sb-slide-title">Ragging &amp; Harassment</h3>
+        <p class="sb-slide-body">Ragging is a <strong>serious offense</strong> under UGC Anti-Ragging Regulations 2009. GRMS ensures <strong>immediate priority</strong> handling.</p>
+        <div class="sb-step-list">
+          <div class="sb-step-item"><div class="sb-step-num" style="background:var(--red);">1</div><span class="sb-step-text">Select <strong>Ragging / Harassment</strong> category</span></div>
+          <div class="sb-step-item"><div class="sb-step-num" style="background:var(--red);">2</div><span class="sb-step-text">Set priority to <strong>Critical</strong></span></div>
+          <div class="sb-step-item"><div class="sb-step-num" style="background:var(--red);">3</div><span class="sb-step-text">Describe incident with date, time, names</span></div>
+          <div class="sb-step-item"><div class="sb-step-num" style="background:var(--red);">4</div><span class="sb-step-text">Attach photos or witness statements</span></div>
+        </div>
+        <div class="sb-tip-box" style="border-color:var(--red);background:var(--red-faint);color:#a03030;">Your identity is <strong>fully protected</strong>. Submit without fear. 🙏</div>
+      </div>
+
+      <div class="sb-slide">
+        <div class="sb-slide-image" style="background:linear-gradient(135deg,#faf5ff,#ede9fe);">
+          <div class="img-bg-pattern">⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡</div>
+          <span class="img-main-icon">⚡</span>
+        </div>
+        <span class="sb-slide-tag" style="background:var(--purple-faint);color:var(--purple);">⚡ AI Help</span>
+        <h3 class="sb-slide-title">Your AI Assistants</h3>
+        <p class="sb-slide-body">Two powerful AI assistants are always available at the bottom-right corner of every page.</p>
+        <div class="sb-step-list">
+          <div class="sb-step-item">
+            <div class="sb-step-num" style="background:var(--teal);">DJ</div>
+            <span class="sb-step-text"><strong>DJ Assistant</strong> — Guidance, rules, timelines, calculator &amp; voice input</span>
+          </div>
+          <div class="sb-step-item">
+            <div class="sb-step-num" style="background:var(--purple);">⚡</div>
+            <span class="sb-step-text"><strong>S+DJ Super Agent</strong> — Live data queries, agentic analytics &amp; complaint drafts</span>
+          </div>
+        </div>
+        <div class="sb-tip-box">Ask either assistant anything — they support <strong>English, Hindi &amp; Odia</strong> and include a built-in <strong>Calculator</strong>.</div>
+        <button class="sb-cta-btn purple" onclick="typeof toggleDJ!=='undefined'&&toggleDJ()">💬 Open DJ Assistant</button>
+      </div>
+
+    </div></div><div class="sb-nav">
+    <button class="sb-nav-btn" id="sbPrevBtn" onclick="sbGoTo(sbCurrentSlide-1)" disabled>← Prev</button>
+    <button class="sb-nav-btn next" id="sbNextBtn" onclick="sbGoTo(sbCurrentSlide+1)">Next →</button>
+  </div>
+
+</div><button class="sidebar-toggle-tab" id="sbToggleTab" onclick="toggleSidebar()" title="Toggle DJ+Slide Sidebar">
+  DJ+SLIDE
+</button>
+
+<div id="toast"><div class="ticon"><svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><span id="toastMsg">Done</span></div>
+
+<script>
+'use strict';
+function sleep(ms){return new Promise(function(r){setTimeout(r,ms);})}
+function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+
+/* ════════════════════════════════════════
+   THEME SYSTEM LOGIC
+════════════════════════════════════════ */
+var appThemes = [
+  { id: 'light-white', icon: '☀️', name: 'Light Theme', isDark: false },
+  { id: 'dark-black', icon: '⚫', name: 'Dark Theme', isDark: true },
+  { id: 'navy-blue', icon: '🌌', name: 'Navy Blue Theme', isDark: true },
+  { id: 'dark-green', icon: '🌲', name: 'Dark Green Theme', isDark: true },
+  { id: 'grey', icon: '🌫️', name: 'Grey Theme', isDark: true },
+  { id: 'light-green', icon: '🍵', name: 'Light Green Theme', isDark: false },
+  { id: 'light-pink', icon: '🌸', name: 'Light Pink Theme', isDark: false },
+  { id: 'light-blue', icon: '💧', name: 'Light Blue Theme', isDark: false },
+  { id: 'light-orange', icon: '🍊', name: 'Light Orange Theme', isDark: false }
+];
+var currentThemeIndex = 0;
+
+function cycleTheme() {
+  currentThemeIndex = (currentThemeIndex + 1) % appThemes.length;
+  var theme = appThemes[currentThemeIndex];
+  
+  document.body.setAttribute('data-theme', theme.id);
+  
+  if(theme.isDark) {
+      document.body.classList.add('app-is-dark');
+  } else {
+      document.body.classList.remove('app-is-dark');
+  }
+  
+  document.querySelectorAll('.theme-toggle-btn').forEach(function(btn) {
+      btn.innerHTML = theme.icon;
+      btn.title = "Theme: " + theme.name;
+  });
+  
+  toast("Switched to " + theme.name, theme.icon);
+}
+
+/* ════════════════════════════════════════
+   EASTER EGG HIGHLIGHT (LOCAL REPLY)
+════════════════════════════════════════ */
+// Updated to accept dynamic duration or default to 5000ms
+function showLocalReply(element, text, duration) {
+  if (element.classList.contains('grms-highlight')) return; // Prevent spam
+  if (!duration) duration = 5000; // Updated default to 5 seconds
+
+  element.classList.add('grms-highlight');
+
+  let popup = document.createElement('div');
+  popup.className = 'easter-egg-popup';
+  popup.textContent = text;
+  document.body.appendChild(popup);
+
+  let rect = element.getBoundingClientRect();
+  popup.style.position = 'fixed';
+  popup.style.top = (rect.bottom + 12) + 'px';
+  popup.style.left = Math.max(10, rect.left) + 'px';
+
+  void popup.offsetWidth; // force reflow
+  popup.classList.add('show');
+
+  setTimeout(function() {
+    element.classList.remove('grms-highlight');
+    popup.classList.remove('show');
+    setTimeout(function(){ popup.remove(); }, 300);
+  }, duration);
+}
+
+/* ════════════════════════════════════════
+   DATE AND TIME UPDATE (Microsecond simulation)
+════════════════════════════════════════ */
+function updateDateTime() {
+  var d = new Date();
+  var hrs = String(d.getHours()).padStart(2, '0');
+  var mins = String(d.getMinutes()).padStart(2, '0');
+  var secs = String(d.getSeconds()).padStart(2, '0');
+  var ms = String(d.getMilliseconds()).padStart(3, '0');
+  var micro = String(Math.floor((performance.now() % 1) * 1000)).padStart(3, '0');
+
+  var timeStr = hrs + ':' + mins + ':' + secs + ':' + ms + micro;
+  var dateStr = d.toLocaleDateString();
+  var fullStr = dateStr + ' ' + timeStr;
+
+  var els = document.querySelectorAll('.datetime-display');
+  for (var i = 0; i < els.length; i++) {
+    els[i].textContent = fullStr;
+  }
+  requestAnimationFrame(updateDateTime);
+}
+// Start real-time clock loop
+requestAnimationFrame(updateDateTime);
+
+/* ════════════════════════════════════════
+   DJ-VISUAL ASSISTANT LOGIC (VIDEO)
+════════════════════════════════════════ */
+function openVisualAssistant() {
+  var modal = document.getElementById('visualModal');
+  modal.classList.remove('hidden');
+  
+  var targetChap = 'login';
+  if (currentUser) {
+    if (currentUser.role === 'complainant') targetChap = 'student';
+    else if (currentUser.role === 'admin') targetChap = 'admin';
+    else if (currentUser.role === 'officer') targetChap = 'officer';
+  }
+  
+  var btns = document.querySelectorAll('.vid-chap-btn');
+  btns.forEach(function(b) {
+    if (b.getAttribute('onclick').indexOf(targetChap) !== -1) {
+      playVidChapter(targetChap, b);
+    }
+  });
+}
+
+function closeVisualModal(e) {
+  if(e && e.target !== document.getElementById('visualModal') && !e.target.closest('.btn-ghost')) return;
+  document.getElementById('visualModal').classList.add('hidden');
+  var vid = document.getElementById('djVidPlayer');
+  if (vid) vid.pause();
+}
+
+function playVidChapter(chap, btn) {
+  document.querySelectorAll('.vid-chap-btn').forEach(function(b){ b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  
+  var vid = document.getElementById('djVidPlayer');
+  var source = document.getElementById('djVidSource');
+  
+  var sources = {
+    login: 'https://ak.picdn.net/shutterstock/videos/1027168676/preview/stock-footage-two-businessmen-shaking-hands-in-the-office-meeting-agreement.webm',
+    student: 'https://ak.picdn.net/shutterstock/videos/1031304524/preview/stock-footage-diverse-business-people-meeting-in-office.webm',
+    admin: 'https://ak.picdn.net/shutterstock/videos/1022880016/preview/stock-footage-business-colleagues-discussing-financial-data-working-together-in-office.webm',
+    officer: 'https://ak.picdn.net/shutterstock/videos/1027105286/preview/stock-footage-business-people-shaking-hands-at-meeting.webm'
+  };
+  
+  source.src = sources[chap] || sources.login;
+  vid.load();
+  var playPromise = vid.play();
+  if (playPromise !== undefined) {
+    playPromise.catch(function(error) { console.log('Autoplay blocked by browser policy.'); });
+  }
+  toast('Playing ' + chap + ' walkthrough', '🎥');
+}
+
+function changeVidQuality(q) {
+  toast('Simulating Quality switch to ' + q + 'p', '⚙️');
+  var vid = document.getElementById('djVidPlayer');
+  var time = vid.currentTime;
+  vid.load();
+  vid.currentTime = time;
+  vid.play();
+}
+
+
+/* ════════════════════════════════════════
+   DJ+SLIDE SIDEBAR LOGIC
+════════════════════════════════════════ */
+var sbCurrentSlide = 0;
+var sbTotalSlides = 7;
+var sbOpen = true;
+
+function buildSbDots() {
+  var dots = document.getElementById('sbDots');
+  dots.innerHTML = '';
+  for (var i = 0; i < sbTotalSlides; i++) {
+    var d = document.createElement('div');
+    d.className = 'sb-dot' + (i === sbCurrentSlide ? ' active' : '');
+    d.setAttribute('data-i', i);
+    d.onclick = (function(idx){ return function(){ sbGoTo(idx); }; })(i);
+    dots.appendChild(d);
+  }
+}
+
+function sbGoTo(idx) {
+  if (idx < 0 || idx >= sbTotalSlides) return;
+  sbCurrentSlide = idx;
+  var track = document.getElementById('sbTrack');
+  track.style.transform = 'translateX(-' + (idx * 300) + 'px)';
+
+  var dots = document.querySelectorAll('.sb-dot');
+  dots.forEach(function(d, i) {
+    d.classList.toggle('active', i === idx);
+  });
+
+  document.getElementById('sbCounter').textContent = (idx + 1) + ' / ' + sbTotalSlides;
+
+  document.getElementById('sbPrevBtn').disabled = idx === 0;
+  var nextBtn = document.getElementById('sbNextBtn');
+  if (idx === sbTotalSlides - 1) {
+    nextBtn.textContent = '↺ Restart';
+    nextBtn.onclick = function() { sbGoTo(0); };
+  } else {
+    nextBtn.textContent = 'Next →';
+    nextBtn.onclick = function() { sbGoTo(sbCurrentSlide + 1); };
+  }
+
+  var sb = document.getElementById('djSlideSidebar');
+  var w = sb.offsetWidth;
+  var slides = document.querySelectorAll('.sb-slide');
+  slides.forEach(function(s){ s.style.minWidth = w + 'px'; });
+  track.style.transform = 'translateX(-' + (idx * w) + 'px)';
+}
+
+function toggleSidebar() {
+  var sb = document.getElementById('djSlideSidebar');
+  var tab = document.getElementById('sbToggleTab');
+  sbOpen = !sbOpen;
+  sb.classList.toggle('collapsed', !sbOpen);
+  document.body.classList.toggle('sb-open', sbOpen);
+
+  if (sbOpen) {
+    tab.style.right = (sb.offsetWidth) + 'px';
+  } else {
+    tab.style.right = '0px';
+  }
+}
+
+window.addEventListener('resize', function() {
+  if (sbOpen) sbGoTo(sbCurrentSlide);
+});
+
+/* ══════════════════════════════
+   PASSWORD VISIBILITY TOGGLE
+══════════════════════════════ */
+var pwVisible = false;
+function togglePasswordVisibility() {
+  pwVisible = !pwVisible;
+  var inp = document.getElementById('loginPass');
+  var showIcon = document.getElementById('eyeIconShow');
+  var hideIcon = document.getElementById('eyeIconHide');
+  inp.type = pwVisible ? 'text' : 'password';
+  showIcon.style.display = pwVisible ? 'none' : 'block';
+  hideIcon.style.display = pwVisible ? 'block' : 'none';
+}
+
+/* ══════════════════════════════
+   SAVE / LOAD CREDENTIALS
+══════════════════════════════ */
+var CREDS_KEY = 'grms_saved_creds';
+function loadSavedCredentials() {
+  try {
+    var saved = localStorage.getItem(CREDS_KEY);
+    if (!saved) return;
+    var data = JSON.parse(saved);
+    if (!data.username || !data.password) return;
+    document.getElementById('loginUser').value = data.username;
+    document.getElementById('loginPass').value = data.password;
+    document.getElementById('saveCreds').checked = true;
+    var banner = document.getElementById('savedBanner');
+    banner.classList.add('show');
+    setTimeout(function(){ banner.classList.remove('show'); }, 5000);
+    document.getElementById('clearSavedBtn').style.display = 'inline-flex';
+    if (data.role) {
+      var tabs = document.querySelectorAll('.role-tab');
+      tabs.forEach(function(tab) {
+        if (tab.textContent.trim().toLowerCase() === data.role) tab.click();
+      });
+    }
+  } catch(e) {}
+}
+function saveCredentials(username, password, role) {
+  try {
+    localStorage.setItem(CREDS_KEY, JSON.stringify({ username: username, password: password, role: role }));
+    document.getElementById('clearSavedBtn').style.display = 'inline-flex';
+  } catch(e) {}
+}
+function clearSavedCredentials() {
+  try {
+    localStorage.removeItem(CREDS_KEY);
+    document.getElementById('clearSavedBtn').style.display = 'none';
+    document.getElementById('saveCreds').checked = false;
+    toast('Saved credentials cleared', '🗑');
+  } catch(e) {}
+}
+
+/* ══ FILE UPLOAD ══ */
+var uploadedFiles=[],MAX_FILES=5,MAX_SIZE=10*1024*1024;
+function getFileIcon(name){var ext=(name.split('.').pop()||'').toLowerCase();if(['jpg','jpeg','png','gif','webp','bmp'].includes(ext))return{icon:'🖼️',cls:'fi-img'};if(ext==='pdf')return{icon:'📄',cls:'fi-pdf'};if(['doc','docx','txt','odt'].includes(ext))return{icon:'📝',cls:'fi-doc'};if(['mp4','mov','avi','mkv','webm'].includes(ext))return{icon:'🎥',cls:'fi-vid'};if(['xls','xlsx','csv'].includes(ext))return{icon:'📊',cls:'fi-doc'};return{icon:'📎',cls:'fi-def'};}
+function formatFileSize(bytes){if(bytes<1024)return bytes+' B';if(bytes<1024*1024)return(bytes/1024).toFixed(1)+' KB';return(bytes/(1024*1024)).toFixed(1)+' MB';}
+function handleDragOver(e){e.preventDefault();e.stopPropagation();document.getElementById('uploadZone').classList.add('dragging');}
+function handleDragLeave(e){e.preventDefault();document.getElementById('uploadZone').classList.remove('dragging');}
+function handleDrop(e){e.preventDefault();e.stopPropagation();document.getElementById('uploadZone').classList.remove('dragging');addFiles(Array.from(e.dataTransfer.files));}
+function handleFileSelect(e){addFiles(Array.from(e.target.files));e.target.value='';}
+function addFiles(files){var added=0,skipped=[];files.forEach(function(f){if(uploadedFiles.length>=MAX_FILES){skipped.push(f.name+' (max 5)');return;}if(f.size>MAX_SIZE){skipped.push(f.name+' (>10MB)');return;}var dup=uploadedFiles.some(function(u){return u.name===f.name&&u.size===f.size;});if(dup){skipped.push(f.name+' (duplicate)');return;}uploadedFiles.push(f);added++;});renderFileList();if(added>0)toast(added+' file(s) added','📎');if(skipped.length)toast('Skipped: '+skipped[0],'⚠');}
+function removeFile(idx){uploadedFiles.splice(idx,1);renderFileList();}
+function renderFileList(){var list=document.getElementById('grFileList'),counter=document.getElementById('uploadCounter');if(uploadedFiles.length===0){list.innerHTML='';counter.style.display='none';return;}counter.style.display='block';counter.textContent=uploadedFiles.length+' / '+MAX_FILES+' files selected';list.innerHTML=uploadedFiles.map(function(f,i){var fi=getFileIcon(f.name);return'<div class="file-item"><div class="file-item-icon '+fi.cls+'">'+fi.icon+'</div><div class="file-item-info"><div class="file-item-name">'+escHtml(f.name)+'</div><div class="file-item-size">'+formatFileSize(f.size)+'</div></div><button class="file-item-remove" onclick="removeFile('+i+')" title="Remove file">×</button></div>';}).join('');}
+
+/* ══ CALCULATOR ══ */
+function safeCalc(expr){var e=expr.trim().replace(/[xX×]/g,'*').replace(/÷/g,'/').replace(/\^/g,'**').replace(/(\d)\s+(\d)/g,'$1$2');var pctOf=e.match(/^([\d.]+)\s*%\s*of\s*([\d.]+)$/i);if(pctOf){var pct=parseFloat(pctOf[1]),base=parseFloat(pctOf[2]);return{expr:pct+'% of '+base,result:roundNice(pct/100*base),note:''};}var gst=e.match(/^([\d.]+)\s*%\s*gst\s+on\s+([\d.]+)$/i);if(gst){var rate=parseFloat(gst[1]),amount=parseFloat(gst[2]),tax=roundNice(rate/100*amount);return{expr:rate+'% GST on '+amount,result:roundNice(amount+tax),note:'Tax: ₹'+tax+' | Total: ₹'+roundNice(amount+tax)};}var ci=e.match(/^([\d.]+)\s+at\s+([\d.]+)\s*%\s+for\s+([\d.]+)\s+year/i);if(ci){var P=parseFloat(ci[1]),r=parseFloat(ci[2])/100,n=parseFloat(ci[3]),A=roundNice(P*Math.pow(1+r,n));return{expr:'CI: P='+P+', r='+ci[2]+'%, n='+n+'yr',result:A,note:'Interest: ₹'+roundNice(A-P)};}var sqrtM=e.match(/^sqrt\s*(?:of\s*)?([\d.]+)$/i);if(sqrtM){var val=parseFloat(sqrtM[1]);return{expr:'√'+val,result:roundNice(Math.sqrt(val)),note:''};}if(/^[\d\s\+\-\*\/\.\(\)\%]+$/.test(e)){try{var res=Function('"use strict";return('+e+')')();if(typeof res==='number'&&isFinite(res))return{expr:e,result:roundNice(res),note:''};}catch(err){}}return null;}
+function roundNice(n){if(Number.isInteger(n))return n;return parseFloat(n.toFixed(4));}
+function isMathQuery(text){var t=text.toLowerCase().trim();if(/^(calc(ulat[e]?)?|compute|what is|find|solve|evaluate)\s+/i.test(t))return true;if(/\d\s*[\+\-\*\/\^x×÷]\s*\d/.test(t))return true;if(/\d+\s*%\s*(of|gst)/i.test(t))return true;if(/\d+\s+at\s+[\d.]+\s*%\s+for/i.test(t))return true;if(/^sqrt/i.test(t))return true;return false;}
+function extractMathExpr(text){return text.trim().replace(/^(calc(ulat[e]?)?|compute|what is|find|solve|evaluate)\s+/i,'');}
+
+/* ══ NEWS DATA ══ */
+var CURRENT_NEWS=[
+  {title:'GRMS achieves 94% resolution rate in Q1 2024',date:'Feb 20, 2024',tag:'System Update',summary:'The platform resolved 94% of all complaints this quarter, with average resolution time dropping to 3.2 days.'},
+  {title:'New 48-hour fast-track for ragging complaints',date:'Feb 15, 2024',tag:'Policy',summary:'A new fast-track protocol ensures all ragging and harassment complaints get immediate investigator assignment within 48 hours.'},
+  {title:'File evidence attachments now supported',date:'Feb 13, 2024',tag:'Feature',summary:'Students can now attach photos, PDFs, videos, and documents directly to their grievance submissions.'},
+  {title:'Hostel infrastructure improvement drive launched',date:'Feb 12, 2024',tag:'Infrastructure',summary:'Following multiple hostel grievances, admin has launched a campus-wide infrastructure audit and repair program.'},
+  {title:'Scholarship disbursement delays under investigation',date:'Feb 10, 2024',tag:'Finance',summary:'The Finance Dept is investigating delays affecting 150+ students.'}
+];
+var OLD_NEWS=[
+  {title:'GRMS upgraded with AI-powered chatbot assistants',date:'Jan 5, 2024',tag:'Tech Update',summary:'DJ and S+DJ were introduced as round-the-clock AI assistants.'},
+  {title:'Anti-ragging committee reconstituted for 2024',date:'Dec 20, 2023',tag:'Policy',summary:'A new 12-member anti-ragging committee was constituted.'},
+  {title:'Record 200 grievances filed in December 2023',date:'Jan 1, 2024',tag:'Statistics',summary:'December 2023 saw peak filings in Examination and Hostel categories.'},
+  {title:'Grievance resolution policy updated — stricter timelines',date:'Nov 15, 2023',tag:'Policy',summary:'Updated policy: 48-hour acknowledgement, 15-day full resolution.'}
+];
+function showNews(bot,type){var list=type==='current'?CURRENT_NEWS:OLD_NEWS;var heading=type==='current'?'📰 Current News & Updates':'📚 Archive — Past News';var tagClass=bot==='sdj'?'sdj-news-tag':'';var html='<strong style="font-size:13px;">'+heading+'</strong>';list.forEach(function(n){html+='<div class="news-card" style="margin-top:8px;"><div class="news-card-header"><span class="news-card-title">'+escHtml(n.title)+'</span><span class="news-tag '+tagClass+'">'+escHtml(n.tag)+'</span></div><div class="news-meta">'+escHtml(n.date)+'</div><div class="news-summary">'+escHtml(n.summary)+'</div></div>';});appendMsg(bot,'bot',html);}
+
+/* ══ LANGUAGE ══ */
+var LANG_LABELS={en:'English',hi:'हिन्दी (Hindi)',or:'ଓଡ଼ିଆ (Odia)'};
+var djLang='en',sdjLang='en';
+function setLang(bot,lang,btn){if(bot==='dj'){djLang=lang;document.querySelectorAll('#djPanel .lang-btn').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');document.getElementById('djLangNote').textContent=LANG_LABELS[lang];if(lang!=='en')appendMsg('dj','bot','🌐 <strong>Language set to '+LANG_LABELS[lang]+'</strong><br><small style="color:var(--text-muted);">Translation preview mode active.</small>');}else{sdjLang=lang;document.querySelectorAll('#sdjPanel .lang-btn').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');document.getElementById('sdjLangNote').textContent=LANG_LABELS[lang];if(lang!=='en')appendMsg('sdj','bot','🌐 <strong>Language set to '+LANG_LABELS[lang]+'</strong><br><small style="color:var(--text-muted);">Translation preview mode active.</small>');}toast('Language: '+LANG_LABELS[lang],'🌐');}
+
+/* ══ VOICE ══ */
+var djMicActive=false,sdjMicActive=false,djMicTimer=null,sdjMicTimer=null;
+var DJ_MIC_SAMPLES=['How do I file a grievance?','What is the resolution timeline?','Calculate 15% of 50000','What documents can I attach?','What are the rules?'];
+var SDJ_MIC_SAMPLES=['Show my grievances and status','Calculate 18% GST on 25000','Show all critical cases','How can agentic AI help here?','Give me a dashboard overview'];
+function toggleMic(bot){if(bot==='dj'){djMicActive=!djMicActive;var btn=document.getElementById('djMicBtn'),inp=document.getElementById('djInput');if(djMicActive){btn.classList.add('listening');inp.placeholder='🎙️ Listening…';djMicTimer=setTimeout(function(){if(!djMicActive)return;djMicActive=false;btn.classList.remove('listening');inp.placeholder='Ask DJ anything…';inp.value=DJ_MIC_SAMPLES[rnd(0,DJ_MIC_SAMPLES.length-1)];autoResize(inp);inp.focus();toast('Voice captured!','🎙️');},2800);}else{clearTimeout(djMicTimer);btn.classList.remove('listening');inp.placeholder='Ask DJ anything…';}}else{sdjMicActive=!sdjMicActive;var btn2=document.getElementById('sdjMicBtn'),inp2=document.getElementById('sdjInput');if(sdjMicActive){btn2.classList.add('listening');inp2.placeholder='🎙️ Listening…';sdjMicTimer=setTimeout(function(){if(!sdjMicActive)return;sdjMicActive=false;btn2.classList.remove('listening');inp2.placeholder='Ask S+DJ anything — I query live data!';inp2.value=SDJ_MIC_SAMPLES[rnd(0,SDJ_MIC_SAMPLES.length-1)];autoResize(inp2);inp2.focus();toast('Voice captured!','🎙️');},2800);}else{clearTimeout(sdjMicTimer);btn2.classList.remove('listening');inp2.placeholder='Ask S+DJ anything — I query live data!';}}}
+
+/* ══ MENU CHIPS TOGGLE ══ */
+function toggleDjChips(){
+  var c=document.getElementById('djChips');
+  c.style.display=(c.style.display==='none')?'flex':'none';
+  if(c.style.display==='flex') document.getElementById('djMessages').scrollTop=99999;
+}
+function toggleSdjChips(){
+  var c=document.getElementById('sdjChips');
+  c.style.display=(c.style.display==='none')?'flex':'none';
+  if(c.style.display==='flex') document.getElementById('sdjMessages').scrollTop=99999;
+}
+
+/* ══ DATA & AUTH ══ */
+var currentUser=null,currentRole='complainant';
+var USERS={'user':{pass:'pass123',role:'complainant',name:'Rajesh Kumar',email:'rajesh@email.com',phone:'9876543210',studentId:'KTU2021CS001',avatar:null},'admin':{pass:'admin123',role:'admin',name:'Priya Sharma',email:'admin@grms.edu.in',phone:'9800000001',studentId:'N/A',avatar:null},'officer':{pass:'off123',role:'officer',name:'Suresh Pattnaik',email:'officer@grms.edu.in',phone:'9800000002',studentId:'N/A',avatar:null}};
+var grievances=[
+  {id:'GRM-2024-001',citizen:'Rajesh Kumar',citizenUser:'user',category:'Academic Issues',subject:'Internal marks not updated for 2 months',location:'CSE Dept, Block A',desc:'My internal assessment marks for 3 subjects have not been updated in the portal despite submissions.',priority:'Urgent',status:'Resolved',date:'2024-01-10',assignedTo:'Suresh Pattnaik',files:['marks_screenshot.jpg','dept_letter.pdf'],timeline:[{s:'Filed',d:'Jan 10',done:true},{s:'Acknowledged',d:'Jan 11',done:true},{s:'Officer Assigned',d:'Jan 12',done:true},{s:'Under Investigation',d:'Jan 13',done:true},{s:'Resolved',d:'Jan 15',done:true}]},
+  {id:'GRM-2024-002',citizen:'Rajesh Kumar',citizenUser:'user',category:'Fees & Finance',subject:'Scholarship amount not credited',location:'Finance Office',desc:'Merit scholarship for Semester 5 has not been credited despite eligibility confirmation.',priority:'Critical',status:'In Progress',date:'2024-02-05',assignedTo:'Suresh Pattnaik',files:['eligibility_cert.pdf'],timeline:[{s:'Filed',d:'Feb 5',done:true},{s:'Acknowledged',d:'Feb 6',done:true},{s:'Officer Assigned',d:'Feb 7',done:true},{s:'Under Investigation',d:'Feb 8',current:true},{s:'Resolved',d:'-',done:false}]},
+  {id:'GRM-2024-003',citizen:'Ananya Das',citizenUser:'ananya',category:'Hostel & Accommodation',subject:'Water supply disrupted in Girls Hostel',location:'Girls Hostel Block C',desc:'Water supply has been disrupted for 3 days.',priority:'Normal',status:'Open',date:'2024-02-12',assignedTo:null,files:[],timeline:[{s:'Filed',d:'Feb 12',done:true},{s:'Acknowledged',d:'Feb 13',current:true},{s:'Officer Assigned',d:'-',done:false},{s:'Under Investigation',d:'-',done:false},{s:'Resolved',d:'-',done:false}]},
+  {id:'GRM-2024-004',citizen:'Mohan Behera',citizenUser:'mohan',category:'Examination',subject:'Answer sheet not evaluated properly',location:'Examination Section',desc:'My answer sheet for Data Structures exam appears improperly checked.',priority:'Urgent',status:'Open',date:'2024-02-14',assignedTo:null,files:['answer_sheet_photo.jpg','marks_card.pdf'],timeline:[{s:'Filed',d:'Feb 14',done:true},{s:'Acknowledged',d:'-',current:true},{s:'Officer Assigned',d:'-',done:false},{s:'Under Investigation',d:'-',done:false},{s:'Resolved',d:'-',done:false}]},
+  {id:'GRM-2024-005',citizen:'Sita Rani',citizenUser:'sita',category:'Faculty Conduct',subject:'Faculty absent repeatedly without notice',location:'ECE Dept',desc:'The faculty for Analog Circuits has been absent for 3 weeks with no substitute.',priority:'Critical',status:'In Progress',date:'2024-02-01',assignedTo:'Suresh Pattnaik',files:['attendance_record.xlsx','video_evidence.mp4'],timeline:[{s:'Filed',d:'Feb 1',done:true},{s:'Acknowledged',d:'Feb 2',done:true},{s:'Officer Assigned',d:'Feb 3',done:true},{s:'Under Investigation',d:'Feb 5',current:true},{s:'Resolved',d:'-',done:false}]},
+  {id:'GRM-2024-006',citizen:'Bijay Nanda',citizenUser:'bijay',category:'Ragging / Harassment',subject:'Verbal harassment by senior students',location:'Hostel Block B',desc:'Senior students have been verbally harassing freshers at night.',priority:'Critical',status:'Rejected',date:'2024-01-20',assignedTo:null,files:[],timeline:[{s:'Filed',d:'Jan 20',done:true},{s:'Acknowledged',d:'Jan 21',done:true},{s:'Rejected',d:'Jan 25',done:true}]}
+];
+var notifs=[
+  {id:1,msg:'Grievance GRM-2024-001 has been resolved.',time:'Jan 15, 2024',read:true,type:'success'},
+  {id:2,msg:'Grievance GRM-2024-002 is under investigation.',time:'Feb 8, 2024',read:false,type:'info'},
+  {id:3,msg:'Grievance GRM-2024-004 requires urgent attention.',time:'Feb 14, 2024',read:false,type:'warning'}
+];
+
+/* ══ SHARED KB ══ */
+var SHARED_KB=[
+  {keys:['how.*file','submit.*griev','file.*griev','create.*griev','raise.*griev'],reply:'To **file a grievance** on GRMS:\n\n1. Click **"File Grievance"** in the top navigation\n2. Select the appropriate **Category**\n3. Fill in **Subject**, Location, and **Description**\n4. Set the **Priority** — Normal, Urgent, or Critical\n5. 📎 **Attach supporting files** (up to 5, 10MB each)\n6. Click **Submit** — you\'ll receive a unique **Tracking ID** instantly\n\nPro tip: Attaching evidence significantly speeds up resolution! 📝'},
+  {keys:['attach|upload|document|file|evidence|photo|video|pdf'],reply:'📎 **Attaching Evidence to Your Grievance**\n\nYou can attach supporting files when filing a grievance!\n\n**Supported formats:** JPG, PNG, PDF, DOC, DOCX, MP4, MOV, XLS, XLSX\n\n**Limits:** Up to 5 files · Max 10 MB per file\n\nEvidence makes your grievance 3× more likely to be resolved quickly!'},
+  {keys:['categor','type.*griev','kind.*griev'],reply:'GRMS supports **11 grievance categories**: Academic Issues, Examination, Fees & Finance, Hostel & Accommodation, Library, Transportation, Faculty Conduct, Infrastructure, Scholarships, Ragging / Harassment, Other.'},
+  {keys:['timeline','how long','resolv.*time','days','deadline','when.*resolv'],reply:'GRMS resolution timeline:\n\n- ✅ **Acknowledgement**: 48 hours\n- 👤 **Officer Assignment**: 72 hours\n- ✔️ **Normal**: 15 days\n- ⚡ **Urgent**: 7 days\n- 🚨 **Critical**: 48–72 hours'},
+  {keys:['rule','regulat','policy','guideline','law'],reply:'Key GRMS rules:\n\n- File within **30 days** of the incident\n- Anonymous complaints are not accepted\n- False grievances may attract disciplinary action\n- All genuine complaints are kept **confidential**\n- Ragging complaints treated with highest priority under UGC 2009'},
+  {keys:['ragging','harass','bully','senior.*student','abuse','violent'],reply:'🚨 **Ragging & Harassment** — Urgent Protocol\n\n1. Select **Ragging / Harassment** category\n2. Set priority to **Critical**\n3. Describe the incident in detail\n4. Attach any evidence\n\nYour complaint is fully confidential. 🙏'},
+  {keys:['track','status','check.*griev','where.*my','progress'],reply:'To **track your grievance**:\n\n1. Click **"Track Status"** in navigation\n2. Enter your **Tracking ID** (GRM-YYYY-XXX)\n3. View the complete status timeline'},
+  {keys:['hello','hi','hey','greet','good morning','good evening','namaste'],reply:'👋 Hello! Welcome to **GRMS Assistant**.\n\nI can help with filing, tracking, rules, timelines, file attachments, and more. Just ask! 😊'},
+  {keys:['thank','thanks','helpful','great','good','awesome'],reply:'😊 You\'re very welcome! Feel free to ask anytime. 🙏'}
+];
+
+function getKbResponse(text){if(isMathQuery(text)){var calc=safeCalc(extractMathExpr(text));if(calc)return'__CALC__:'+JSON.stringify(calc);}var t=text.toLowerCase();for(var i=0;i<SHARED_KB.length;i++){for(var j=0;j<SHARED_KB[i].keys.length;j++){if(new RegExp(SHARED_KB[i].keys[j],'i').test(t))return SHARED_KB[i].reply;}}return null;}
+
+/* ══ AUTH & APP ══ */
+function setRole(r,btn){currentRole=r;document.querySelectorAll('.role-tab').forEach(function(t){t.classList.remove('active');});btn.classList.add('active');}
+
+function clearLoginError() {
+  document.getElementById('loginUser').classList.remove('input-error');
+  document.getElementById('loginPass').classList.remove('input-error');
+  document.getElementById('loginErrorMsg').style.display = 'none';
+}
+
+async function doLogin(){
+  var u=document.getElementById('loginUser').value.trim();
+  var p=document.getElementById('loginPass').value.trim();
+  var uInput = document.getElementById('loginUser');
+  var pInput = document.getElementById('loginPass');
+  var errorMsg = document.getElementById('loginErrorMsg');
+  var errorText = document.getElementById('loginErrorText');
+
+  // Reset styles
+  clearLoginError();
+
+  function showError(msg, target) {
+      // Force reflow for animation restart
+      void uInput.offsetWidth;
+      void pInput.offsetWidth;
+
+      if(target === 'both' || target === 'user') uInput.classList.add('input-error');
+      if(target === 'both' || target === 'pass') pInput.classList.add('input-error');
+      errorText.textContent = msg;
+      errorMsg.style.display = 'flex';
+      toast(msg, '✗');
+  }
+
+  if(!u||!p){
+      showError('Please enter both username and password.', 'both');
+      return;
+  }
+  
+  try {
+      let res = await fetch('/api/login', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({username: u, password: p, role: currentRole})
+      });
+      if (!res.ok) {
+          showError('Incorrect username, password, or role.', 'both');
+          return;
+      }
+      var user = await res.json();
+      
+      if(document.getElementById('saveCreds').checked){saveCredentials(u,p,currentRole);toast('Credentials saved!','💾');}
+      else{try{localStorage.removeItem(CREDS_KEY);}catch(e){}}
+      currentUser=user;
+      await launchApp();
+  } catch (err) {
+      showError('Server connection failed.', 'both');
+  }
+}
+
+async function doRegister(){var name=document.getElementById('regName').value.trim(),user=document.getElementById('regUser').value.trim(),pass=document.getElementById('regPass').value.trim();if(!name||!user||!pass){toast('Fill required fields','!');return;}try {let res = await fetch('/api/register', {method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({name:name, username:user, password:pass, email:document.getElementById('regEmail').value, phone:document.getElementById('regPhone').value, studentId:document.getElementById('regAadhaar').value})});if(res.ok) {toast('Registered! Please sign in.','✓');showLogin();} else {toast('Registration failed','✗');}} catch(err) { toast('Server error!','✗'); }}
+function showRegister(){document.getElementById('loginPanel').style.display='none';document.getElementById('registerPanel').style.display='block';}
+function showLogin(){document.getElementById('loginPanel').style.display='block';document.getElementById('registerPanel').style.display='none';}
+
+function doLogout() {
+  currentUser=null;
+  document.getElementById('appShell').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  
+  // Reset theme back to default
+  var isSbOpen = document.body.classList.contains('sb-open');
+  document.body.className = ''; 
+  if(isSbOpen) document.body.classList.add('sb-open');
+
+  if(pwVisible) togglePasswordVisibility();
+}
+
+async function fetchGrievances() {
+  if(!currentUser) return;
+  try {
+      let res = await fetch('/api/grievances?username='+currentUser.username+'&role='+currentUser.role);
+      if(res.ok) grievances = await res.json();
+  } catch(e) { console.error('Failed to fetch grievances', e); }
+}
+
+async function launchApp() {
+  await fetchGrievances();
+
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('appShell').style.display='flex';
+  
+  // Apply dynamic theme based on role
+  var isSbOpen = document.body.classList.contains('sb-open');
+  var currentTheme = document.body.getAttribute('data-theme') || 'light-white';
+  document.body.className = ''; 
+  document.body.setAttribute('data-theme', currentTheme);
+  
+  if(isSbOpen) document.body.classList.add('sb-open');
+  document.body.classList.add('theme-' + currentUser.role);
+  
+  // Re-apply dark app class if currently a dark theme
+  var darkThemeObj = appThemes.find(t => t.id === currentTheme);
+  if(darkThemeObj && darkThemeObj.isDark) {
+     document.body.classList.add('app-is-dark');
+  }
+
+  var r=currentUser.role;
+  document.getElementById('topRole').textContent=r==='complainant'?'Student':r==='admin'?'Admin':'Officer';
+  
+  updateAvatars();
+  
+  buildNav();
+  showPage('dashboard');
+  initDJ();
+  initSDJ();
+}
+
+function updateAvatars() {
+    if(!currentUser) return;
+    var initial = currentUser.name[0].toUpperCase();
+    var content = currentUser.avatar ? '<img src="'+currentUser.avatar+'" class="avatar-img">' : initial;
+    
+    var topAvatar = document.getElementById('topAvatar');
+    if(topAvatar) topAvatar.innerHTML = content;
+    var profileAvatar = document.getElementById('profileAvatar');
+    if(profileAvatar) profileAvatar.innerHTML = content;
+}
+
+function handleProfilePic(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(event) {
+        var dataUrl = event.target.result;
+        currentUser.avatar = dataUrl;
+        USERS[currentUser.username].avatar = dataUrl;
+        updateAvatars();
+        toast('Profile picture updated!', '🖼️');
+    };
+    reader.readAsDataURL(file);
+}
+
+function updateNavBadge() {
+    var el = document.getElementById('navBadge');
+    if(!el) return;
+    var unread = notifs.filter(function(n){ return !n.read; }).length;
+    if(unread > 0) {
+        el.textContent = unread;
+        el.style.display = 'inline-block';
+    } else {
+        el.style.display = 'none';
+    }
+}
+
+function buildNav(){
+    var r=currentUser.role;
+    var navs={
+        complainant:[
+            {id:'dashboard',label:'Dashboard',icon:'<path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>'},
+            {id:'file',label:'File Grievance',icon:'<path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zm-4-8h-3v3H9v-3H6v-2h3V7h2v3h3v2z"/>'},
+            {id:'track',label:'Track Status',icon:'<path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>'},
+            {id:'notifications',label:'Notifications',icon:'<path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>'},
+            {id:'profile',label:'My Profile',icon:'<path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>'}
+        ],
+        admin:[
+            {id:'dashboard',label:'Dashboard',icon:'<path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>'},
+            {id:'grievances',label:'All Grievances',icon:'<path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm-1 2l5 5h-5V4zM6 20V4h5v6h6v10H6z"/>'},
+            {id:'reports',label:'Reports',icon:'<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>'},
+            {id:'notifications',label:'Notifications',icon:'<path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>'},
+            {id:'profile',label:'Profile',icon:'<path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>'}
+        ],
+        officer:[
+            {id:'dashboard',label:'Dashboard',icon:'<path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>'},
+            {id:'grievances',label:'Assigned Cases',icon:'<path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm-1 2l5 5h-5V4zM6 20V4h5v6h6v10H6z"/>'},
+            {id:'notifications',label:'Notifications',icon:'<path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>'},
+            {id:'profile',label:'Profile',icon:'<path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>'}
+        ]
+    };
+    
+    var items=navs[r]||navs.complainant,html='';
+    items.forEach(function(n){
+        var badgeStr = '';
+        if(n.id === 'notifications') {
+            var unread = notifs.filter(function(notif){ return !notif.read; }).length;
+            badgeStr = '<span id="navBadge" style="display:'+(unread>0?'inline-block':'none')+';background:var(--red);color:white;font-size:10px;padding:2px 6px;border-radius:10px;margin-left:6px;vertical-align:middle;line-height:1;">'+unread+'</span>';
+        }
+        html+='<div class="nav-item" id="nav-'+n.id+'" onclick="showPage(\''+n.id+'\')">'+'<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">'+n.icon+'</svg>'+n.label+badgeStr+'</div>';
+    });
+    document.getElementById('navBar').innerHTML=html;
+}
+
+function showPage(id){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});var pg=document.getElementById('page'+id[0].toUpperCase()+id.slice(1));if(pg)pg.classList.add('active');var nav=document.getElementById('nav-'+id);if(nav)nav.classList.add('active');if(id==='dashboard')buildDashboard();if(id==='grievances')renderGrievanceList();if(id==='track')renderMyGrievances();if(id==='reports')buildReports();if(id==='notifications')renderNotifications();if(id==='profile')renderProfile();}
+function buildDashboard(){var r=currentUser.role,all=grievances;var my=all.filter(function(g){return g.citizenUser===currentUser.username;});if(r==='complainant'){document.getElementById('dashTitle').textContent='Welcome, '+currentUser.name.split(' ')[0];document.getElementById('dashSub').textContent='Overview of your filed grievances';document.getElementById('dashStats').innerHTML=scards([['Total Filed',my.length,'var(--teal-faint)','var(--teal)'],['Resolved',my.filter(function(g){return g.status==='Resolved';}).length,'var(--green-faint)','var(--green)'],['In Progress',my.filter(function(g){return g.status==='In Progress';}).length,'#eef2ff','#5b47d5'],['Open',my.filter(function(g){return g.status==='Open';}).length,'var(--amber-faint)','var(--amber)']]);fillDashTable(my);}else if(r==='admin'){document.getElementById('dashTitle').textContent='Admin Dashboard';document.getElementById('dashSub').textContent='System-wide overview';document.getElementById('dashStats').innerHTML=scards([['Total',all.length,'var(--teal-faint)','var(--teal)'],['Open',all.filter(function(g){return g.status==='Open';}).length,'var(--amber-faint)','var(--amber)'],['In Progress',all.filter(function(g){return g.status==='In Progress';}).length,'#eef2ff','#5b47d5'],['Resolved',all.filter(function(g){return g.status==='Resolved';}).length,'var(--green-faint)','var(--green)']]);fillDashTable(all.slice(0,5));}else{var mc=all.filter(function(g){return g.assignedTo===currentUser.name;});document.getElementById('dashTitle').textContent='Officer Dashboard';document.getElementById('dashSub').textContent='Cases assigned for investigation';document.getElementById('dashStats').innerHTML=scards([['Assigned',mc.length,'var(--teal-faint)','var(--teal)'],['In Progress',mc.filter(function(g){return g.status==='In Progress';}).length,'#eef2ff','#5b47d5'],['Resolved',mc.filter(function(g){return g.status==='Resolved';}).length,'var(--green-faint)','var(--green)'],['Critical',mc.filter(function(g){return g.priority==='Critical';}).length,'var(--red-faint)','var(--red)']]);fillDashTable(mc);}}
+function scards(items){return items.map(function(a){return'<div class="stat-card"><div class="sc-icon" style="background:'+a[2]+';"><svg width="18" height="18" viewBox="0 0 24 24" fill="'+a[3]+'"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z"/></svg></div><div class="sc-label">'+a[0]+'</div><div class="sc-value">'+a[1]+'</div></div>';}).join('');}
+function fillDashTable(list){document.getElementById('dashTableBody').innerHTML=list.slice(0,5).map(function(g){return'<tr><td><code style="font-size:12px;background:var(--surface);padding:3px 7px;border-radius:5px;">'+g.id+'</code></td><td>'+g.category+'</td><td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+g.subject+'</td><td style="color:var(--text-muted);font-size:13px;">'+g.date+'</td><td>'+statusBadge(g.status)+'</td><td><button class="btn btn-ghost btn-sm" onclick="openDetail(\''+g.id+'\')">View &#8594;</button></td></tr>';}).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:24px;">No grievances found</td></tr>';}
+function renderGrievanceList(){var r=currentUser.role,sf=document.getElementById('filterStatus').value,cf=document.getElementById('filterCat').value;var list=r==='officer'?grievances.filter(function(g){return g.assignedTo===currentUser.name;}):grievances.slice();if(sf)list=list.filter(function(g){return g.status===sf;});if(cf)list=list.filter(function(g){return g.category===cf;});document.getElementById('grListTitle').textContent=r==='officer'?'Assigned Cases':'All Grievances';document.getElementById('grListSub').textContent=list.length+' grievance(s) found';document.getElementById('grListBody').innerHTML=list.map(function(g){var fc=g.files&&g.files.length?'<span style="font-size:11px;background:var(--teal-faint);color:var(--teal);padding:2px 7px;border-radius:10px;font-weight:600;">📎 '+g.files.length+'</span>':'<span style="color:var(--slate-light);font-size:11px;">—</span>';return'<tr><td><code style="font-size:12px;background:var(--surface);padding:3px 7px;border-radius:5px;">'+g.id+'</code></td><td style="font-size:13px;">'+g.citizen+'</td><td><span style="font-size:12px;background:var(--surface);padding:3px 8px;border-radius:20px;color:var(--text-muted);">'+g.category+'</span></td><td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+g.subject+'</td><td style="color:var(--text-muted);font-size:12px;">'+g.date+'</td><td>'+fc+'</td><td>'+priorityBadge(g.priority)+'</td><td>'+statusBadge(g.status)+'</td><td><button class="btn btn-secondary btn-sm" onclick="openDetail(\''+g.id+'\')">Manage</button></td></tr>';}).join('')||'<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:24px;">No matches</td></tr>';}
+async function submitGrievance(){var cat=document.getElementById('grCategory').value,sub=document.getElementById('grSubject').value.trim(),loc=document.getElementById('grLocation').value.trim(),desc=document.getElementById('grDesc').value.trim(),pri=document.getElementById('grPriority').value;if(!cat||!sub||!loc||!desc){toast('Please fill all required fields','!');return;}var fileNames=uploadedFiles.map(function(f){return f.name;});try{let res=await fetch('/api/grievances',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:currentUser.username,citizen:currentUser.name,category:cat,subject:sub,location:loc,desc:desc,priority:pri,files:fileNames})});if(res.ok){var data=await res.json();notifs.unshift({id:Date.now(),msg:'Grievance '+data.id+' submitted'+(fileNames.length?' with '+fileNames.length+' attachment(s).':'.'),time:data.date,read:false,type:'success'});updateNavBadge();toast('Submitted! ID: '+data.id,'✓');uploadedFiles=[];renderFileList();resetFileForm();await fetchGrievances();showPage('track');}}catch(err){toast('Failed to submit grievance','✗');}}
+function resetFileForm(){['grCategory','grSubject','grLocation','grDesc'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('grPriority').value='Normal';uploadedFiles=[];renderFileList();}
+function renderMyGrievances(){document.getElementById('myGrievancesList').style.display=currentUser.role==='complainant'?'block':'none';if(currentUser.role!=='complainant')return;var list=grievances.filter(function(g){return g.citizenUser===currentUser.username;});document.getElementById('myGrList').innerHTML=list.map(function(g){var fc=g.files&&g.files.length?'<span style="font-size:11px;color:var(--teal);">📎 '+g.files.length+'</span> ':'';return'<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:white;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;cursor:pointer;" onclick="quickTrack(\''+g.id+'\')"><div><code style="font-size:12px;color:var(--teal);font-weight:600;">'+g.id+'</code><p style="font-size:13px;margin-top:2px;">'+fc+g.subject+'</p></div><div>'+statusBadge(g.status)+'</div></div>';}).join('')||'<p style="color:var(--text-muted);font-size:13px;">No grievances yet. <a href="#" onclick="showPage(\'file\');return false;" style="color:var(--teal);">File your first grievance</a></p>';}
+function quickTrack(id){document.getElementById('trackInput').value=id;trackGrievance();}
+function trackGrievance(){var id=document.getElementById('trackInput').value.trim(),g=null;for(var i=0;i<grievances.length;i++){if(grievances[i].id.toLowerCase()===id.toLowerCase()){g=grievances[i];break;}}var res=document.getElementById('trackResult');res.classList.remove('hidden');if(!g){res.innerHTML='<div style="background:var(--red-faint);border-radius:10px;padding:16px;color:var(--red);font-size:14px;">No grievance found: <strong>'+escHtml(id)+'</strong></div>';return;}var filesHtml='';if(g.files&&g.files.length){filesHtml='<div style="margin-top:12px;padding:10px 14px;background:var(--teal-faint);border-radius:8px;font-size:13px;"><strong style="color:var(--teal);">📎 Attachments ('+g.files.length+')</strong><div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:5px;">'+g.files.map(function(f){var fi=getFileIcon(f);return'<span style="padding:2px 8px;background:white;border:1px solid var(--border);border-radius:8px;font-size:11px;">'+fi.icon+' '+escHtml(f)+'</span>';}).join('')+'</div></div>';}res.innerHTML='<div style="background:white;border:1px solid var(--border);border-radius:12px;padding:20px;"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:8px;"><div><code style="font-size:13px;color:var(--teal);font-weight:700;">'+g.id+'</code><p style="font-weight:600;font-size:15px;margin-top:4px;">'+escHtml(g.subject)+'</p></div>'+statusBadge(g.status)+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;font-size:13px;"><span style="color:var(--text-muted);">Category:</span><span>'+g.category+'</span><span style="color:var(--text-muted);">Filed:</span><span>'+g.date+'</span><span style="color:var(--text-muted);">Priority:</span><span>'+g.priority+'</span><span style="color:var(--text-muted);">Assigned:</span><span>'+(g.assignedTo||'Not yet assigned')+'</span></div>'+filesHtml+'<div class="timeline" style="margin-top:14px;">'+g.timeline.map(function(t){return'<div class="tl-item"><div class="tl-dot '+(t.done?'done':t.current?'current':'pending')+'">'+(t.done?'✓':t.current?'●':'○')+'</div><div class="tl-content"><strong>'+t.s+'</strong><span>'+t.d+'</span></div></div>';}).join('')+'</div></div>';}
+function openDetail(id){var g=null;for(var i=0;i<grievances.length;i++){if(grievances[i].id===id){g=grievances[i];break;}}if(!g)return;var r=currentUser.role;document.getElementById('modalTitle').textContent=g.subject;document.getElementById('modalId').textContent=g.id+' · Filed '+g.date;var filesHtml='';if(g.files&&g.files.length){filesHtml='<div style="margin-top:14px;padding:12px;background:var(--teal-faint);border-radius:8px;"><p style="font-size:12px;font-weight:700;color:var(--teal);margin-bottom:7px;">📎 Attached Evidence ('+g.files.length+' file'+(g.files.length>1?'s':'')+')</p><div style="display:flex;flex-wrap:wrap;gap:5px;">'+g.files.map(function(f){var fi=getFileIcon(f);return'<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;background:white;border:1px solid var(--border);border-radius:8px;font-size:12px;">'+fi.icon+' '+escHtml(f)+'</span>';}).join('')+'</div></div>';}var updateHtml='';if(r==='admin'||r==='officer'){var assignHtml=r==='admin'?'<select id="newAssign" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;background:white;flex:1;min-width:140px;"><option'+(!g.assignedTo?' selected':'')+' value="">Unassigned</option><option'+(g.assignedTo==='Suresh Pattnaik'?' selected':'')+'>Suresh Pattnaik</option><option'+(g.assignedTo==='Priya Sharma'?' selected':'')+'>Priya Sharma</option></select>':'';updateHtml='<div style="margin-top:20px;border-top:1px solid var(--border);padding-top:16px;"><p style="font-size:13px;font-weight:600;margin-bottom:10px;">Update Status</p><div style="display:flex;gap:10px;flex-wrap:wrap;"><select id="newStatus" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;background:white;flex:1;min-width:140px;">'+['Open','In Progress','Resolved','Rejected'].map(function(s){return'<option'+(g.status===s?' selected':'')+'>'+s+'</option>';}).join('')+'</select>'+assignHtml+'</div><button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="updateGrievance(\''+g.id+'\')">Update</button></div>';}document.getElementById('modalBody').innerHTML='<div style="margin-bottom:16px;">'+statusBadge(g.status)+' &nbsp; '+priorityBadge(g.priority)+'</div><div class="detail-row"><span class="key">Category</span><span>'+g.category+'</span></div><div class="detail-row"><span class="key">Filed by</span><span>'+g.citizen+'</span></div><div class="detail-row"><span class="key">Location</span><span>'+g.location+'</span></div><div class="detail-row"><span class="key">Assigned to</span><span>'+(g.assignedTo||'Unassigned')+'</span></div><div style="margin-top:14px;padding:12px 14px;background:var(--surface);border-radius:8px;font-size:14px;line-height:1.6;color:var(--text);">'+escHtml(g.desc)+'</div>'+filesHtml+updateHtml;document.getElementById('modalFooter').innerHTML='<button class="btn btn-secondary btn-sm" onclick="document.getElementById(\'detailModal\').classList.add(\'hidden\')">Close</button>';document.getElementById('detailModal').classList.remove('hidden');}
+async function updateGrievance(id){var ns=document.getElementById('newStatus').value,na=document.getElementById('newAssign');var assignedTo=na?na.value:null;try{let res=await fetch('/api/grievances/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({status:ns,assignedTo:assignedTo})});if(res.ok){notifs.unshift({id:Date.now(),msg:'Grievance '+id+' updated to "'+ns+'".',time:new Date().toISOString().split('T')[0],read:false,type:ns==='Resolved'?'success':'info'});updateNavBadge();document.getElementById('detailModal').classList.add('hidden');toast('Updated to "'+ns+'"','✓');await fetchGrievances();if(document.getElementById('pageGrievances').classList.contains('active'))renderGrievanceList();if(document.getElementById('pageDashboard').classList.contains('active'))buildDashboard();}}catch(err){toast('Failed to update','✗');}}
+function closeModal(e){if(e.target===document.getElementById('detailModal'))document.getElementById('detailModal').classList.add('hidden');}
+function buildReports(){var total=grievances.length,res=grievances.filter(function(g){return g.status==='Resolved';}).length;document.getElementById('rTotal').textContent=total;document.getElementById('rResolved').textContent=res;document.getElementById('rResPct').textContent=Math.round(res/total*100)+'% rate';document.getElementById('rInProg').textContent=grievances.filter(function(g){return g.status==='In Progress';}).length;document.getElementById('rPending').textContent=grievances.filter(function(g){return g.status==='Open';}).length;var cats={};grievances.forEach(function(g){cats[g.category]=(cats[g.category]||0)+1;});var mx=Math.max.apply(null,Object.values(cats));document.getElementById('catBreakdown').innerHTML=Object.entries(cats).sort(function(a,b){return b[1]-a[1];}).map(function(e){return'<div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span>'+e[0]+'</span><span style="font-weight:600;color:var(--teal);">'+e[1]+'</span></div><div style="height:6px;background:var(--border);border-radius:3px;"><div style="height:100%;width:'+(e[1]/mx*100)+'%;background:var(--teal);border-radius:3px;"></div></div></div>';}).join('');var months=['Oct','Nov','Dec','Jan','Feb'],vals=[8,12,9,15,6],mmax=15;document.getElementById('monthTrend').innerHTML='<div style="display:flex;align-items:flex-end;gap:8px;height:80px;margin-bottom:8px;">'+months.map(function(m,i){return'<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><span style="font-size:11px;color:var(--teal);font-weight:600;">'+vals[i]+'</span><div style="width:100%;background:'+(i===4?'var(--teal)':'var(--teal-faint)')+';border-radius:4px 4px 0 0;height:'+(vals[i]/mmax*60)+'px;"></div></div>';}).join('')+'</div><div style="display:flex;gap:8px;">'+months.map(function(m){return'<div style="flex:1;text-align:center;font-size:11px;color:var(--text-muted);">'+m+'</div>';}).join('')+'</div>';}
+function renderNotifications(){var ic={success:'✓',info:'ℹ',warning:'!'},co={success:'var(--green)',info:'#5b47d5',warning:'var(--amber)'},bg={success:'var(--green-faint)',info:'#eef2ff',warning:'var(--amber-faint)'};document.getElementById('notifList').innerHTML=notifs.map(function(n){return'<div style="display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);'+(n.read?'opacity:.7':'')+'" onclick="markRead('+n.id+')"><div style="width:32px;height:32px;border-radius:50%;background:'+bg[n.type]+';display:flex;align-items:center;justify-content:center;font-size:13px;color:'+co[n.type]+';font-weight:700;flex-shrink:0;">'+ic[n.type]+'</div><div style="flex:1;"><p style="font-size:14px;'+(!n.read?'font-weight:600':'')+'">'+escHtml(n.msg)+'</p><p style="font-size:12px;color:var(--text-muted);margin-top:3px;">'+n.time+'</p></div>'+(!n.read?'<div style="width:8px;height:8px;background:var(--teal);border-radius:50%;margin-top:6px;flex-shrink:0;"></div>':'')+'</div>';}).join('')||'<p style="color:var(--text-muted);padding:16px 0;">No notifications</p>';}
+function markRead(id){for(var i=0;i<notifs.length;i++){if(notifs[i].id===id){notifs[i].read=true;break;}}renderNotifications(); updateNavBadge();}
+function renderProfile(){var u=currentUser; document.getElementById('profileName').textContent=u.name;document.getElementById('profileRole').textContent=u.role==='complainant'?'Student':u.role==='admin'?'Administrator':'Investigation Officer';document.getElementById('profileDetails').innerHTML='<div class="detail-row"><span class="key">Username</span><span>'+u.username+'</span></div><div class="detail-row"><span class="key">Email</span><span>'+u.email+'</span></div><div class="detail-row"><span class="key">Phone</span><span>'+u.phone+'</span></div>'+(u.role==='complainant'?'<div class="detail-row"><span class="key">Student ID</span><span>'+u.studentId+'</span></div>':'')+'<div class="detail-row"><span class="key">Role</span><span>'+(u.role==='complainant'?'Student':u.role)+'</span></div><div style="margin-top:20px;"><button class="btn btn-secondary btn-sm" onclick="toast(\'Profile update coming soon\',\'!\')">Edit Profile</button></div>'; updateAvatars();}
+
+/* ══ DJ ══ */
+var djOpen=false,djBusy=false;
+function initDJ(){document.getElementById('djMessages').innerHTML='';appendMsg('dj','bot','👋 Hi <strong>'+currentUser.name.split(' ')[0]+'</strong>! I\'m <strong>DJ</strong>, your GRMS assistant.<br><small style="color:var(--text-muted);">Ask me anything — grievances, rules, timelines, file attachments, or use 🔢 Calculator &amp; 🎙️ Voice!</small>');}
+function toggleDJ(){djOpen=!djOpen;document.getElementById('djPanel').classList.toggle('open',djOpen);document.getElementById('djFab').classList.toggle('open',djOpen);if(djOpen){document.getElementById('djBadge').style.display='none';document.getElementById('djInput').focus();}}
+function djChipSend(t){document.getElementById('djChips').style.display='none';document.getElementById('djInput').value=t;djSend();}
+function djKeyDown(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();djSend();}}
+function djSend(){
+  if(djBusy)return;
+  var inp=document.getElementById('djInput'),raw=inp.value.trim();
+  if(!raw)return;
+  inp.value='';inp.style.height='auto';
+  document.getElementById('djChips').style.display='none';
+  appendMsg('dj','user',escHtml(raw));
+  djBusy=true;document.getElementById('djSendBtn').disabled=true;
+  var tid=appendTyping('dj');
+  sleep(rnd(600,1100)).then(function(){
+    try{
+      removeTyping(tid);
+      var reply=getKbResponse(raw);
+      if(!reply){
+        var t=raw.toLowerCase();
+        if(/my.*grievan|my.*case|my.*compla/i.test(t)){
+          if(currentUser){var myG=grievances.filter(function(g){return g.citizenUser===currentUser.username;});if(myG.length===0)reply='You haven\'t filed any grievances yet!\n\nGo to **File Grievance** to submit your first complaint. 📝';else reply='You have **'+myG.length+' grievance(s)**:\n\n'+myG.map(function(g){return'- **'+g.id+'** — '+g.subject.substring(0,40)+'... ('+g.status+')'}).join('\n')+'\n\nGo to **Track Status** for full details! 🔍';}else{reply='Please **sign in** first. 🔑';}}
+        else{reply='I can help with:\n\n- 📝 **How to file** a grievance\n- 📎 **File uploads** as evidence\n- 📋 **Rules & timelines**\n- 🔍 **Tracking** your complaint\n- 🚨 **Ragging** complaints\n- 🔢 **Calculator** — try "calculate 18% of 5000"\n\nCould you be more specific? 😊';}
+      }
+      if(typeof reply==='string'&&reply.indexOf('__CALC__:')===0){appendDjCalcCard(JSON.parse(reply.slice(9)));}else{appendMsg('dj','bot',fmtReply(reply));}
+    }catch(e){appendMsg('dj','bot','Sorry, I encountered an issue. Please try again! 🙏');}
+    finally{djBusy=false;document.getElementById('djSendBtn').disabled=false;}
+  });
+}
+function appendDjCalcCard(data){var msgs=document.getElementById('djMessages');var wrap=document.createElement('div');wrap.className='chat-msg bot';wrap.style.maxWidth='96%';var noteHtml=data.note?'<div class="dj-calc-expr" style="margin-top:4px;">'+escHtml(data.note)+'</div>':'';wrap.innerHTML='<div class="msg-avatar dj-msg-av">DJ</div><div class="dj-calc-card"><div class="dj-calc-label">🔢 Calculator · Result</div><div class="dj-calc-value">= '+escHtml(String(data.result))+'</div><div class="dj-calc-expr">'+escHtml(data.expr)+'</div>'+noteHtml+'</div>';msgs.appendChild(wrap);msgs.scrollTop=99999;}
+
+/* ══ S+DJ ══ */
+var sdjOpen=false,sdjBusy=false;
+function initSDJ(){document.getElementById('sdjMessages').innerHTML='';var r=currentUser.role,fn=currentUser.name.split(' ')[0];var roleCtx=r==='admin'?'I can query all grievances, assign cases, run analytics, and give you actionable insights.':r==='officer'?'I can show your assigned cases, help prioritize investigations, and suggest next actions.':'I can look up your cases in real-time, draft complaints, and guide you through the entire process.';appendMsg('sdj','bot','⚡ <strong>S+DJ online!</strong> Hi <strong>'+fn+'</strong>! I\'m your <strong>Agentic AI Super Assistant</strong>.<br><br><em style="color:var(--text-muted);font-size:12px;">'+roleCtx+'</em><br><br>Try the chips above or ask me anything! ⚡');}
+function toggleSDJ(){sdjOpen=!sdjOpen;document.getElementById('sdjPanel').classList.toggle('open',sdjOpen);document.getElementById('sdjFab').classList.toggle('open',sdjOpen);if(sdjOpen)document.getElementById('sdjInput').focus();}
+function sdjChipSend(t){document.getElementById('sdjChips').style.display='none';document.getElementById('sdjInput').value=t;sdjSend();}
+function sdjKeyDown(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sdjSend();}}
+
+function appendSdjAgentStep(icon,title,body){var msgs=document.getElementById('sdjMessages');var wrap=document.createElement('div');wrap.className='chat-msg bot';wrap.style.maxWidth='98%';wrap.innerHTML='<div class="msg-avatar sdj-msg-av">⚡</div><div class="agent-step"><div class="agent-step-header"><div class="agent-step-icon" style="background:rgba(124,58,237,.15);">'+icon+'</div><span class="agent-step-title">'+escHtml(title)+'</span></div><div class="agent-step-body">'+body+'</div></div>';msgs.appendChild(wrap);msgs.scrollTop=99999;}
+function appendSdjInsight(html){var msgs=document.getElementById('sdjMessages');var wrap=document.createElement('div');wrap.className='chat-msg bot';wrap.style.maxWidth='98%';wrap.innerHTML='<div class="msg-avatar sdj-msg-av">⚡</div><div class="agent-insight">'+html+'</div>';msgs.appendChild(wrap);msgs.scrollTop=99999;}
+function appendSdjResult(html){var msgs=document.getElementById('sdjMessages');var wrap=document.createElement('div');wrap.className='chat-msg bot';wrap.style.maxWidth='98%';wrap.innerHTML='<div class="msg-avatar sdj-msg-av">⚡</div><div class="agent-result" style="color:#196646;">'+html+'</div>';msgs.appendChild(wrap);msgs.scrollTop=99999;}
+function appendSdjDataTable(headers,rows,caption){var msgs=document.getElementById('sdjMessages');var wrap=document.createElement('div');wrap.className='chat-msg bot';wrap.style.maxWidth='99%';var tableHtml='<table class="agent-data-table"><thead><tr>'+headers.map(function(h){return'<th>'+escHtml(h)+'</th>';}).join('')+'</tr></thead><tbody>'+rows.map(function(row){return'<tr>'+row.map(function(cell){return'<td>'+cell+'</td>';}).join('')+'</tr>';}).join('')+'</tbody></table>';if(caption)tableHtml='<div style="font-size:11px;font-weight:700;color:var(--purple);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px;">'+escHtml(caption)+'</div>'+tableHtml;wrap.innerHTML='<div class="msg-avatar sdj-msg-av">⚡</div><div style="background:linear-gradient(135deg,#faf5ff,#fffbeb);border:1px solid rgba(124,58,237,.15);border-radius:10px;padding:10px 12px;max-width:100%;overflow-x:auto;animation:agentIn .3s ease;">'+tableHtml+'</div>';msgs.appendChild(wrap);msgs.scrollTop=99999;}
+
+function sdjAgentFlow(steps,finalFn){var chain=Promise.resolve();steps.forEach(function(step){chain=chain.then(function(){return sleep(step.delay||700).then(function(){step.fn();});});});return chain.then(function(){return sleep(400).then(function(){try{finalFn();}catch(e){}sdjBusy=false;document.getElementById('sdjSendBtn').disabled=false;});}).catch(function(){sdjBusy=false;document.getElementById('sdjSendBtn').disabled=false;});}
+
+function sdjFlowMyGrievances(){var myG=grievances.filter(function(g){return currentUser&&g.citizenUser===currentUser.username;});var inProg=myG.filter(function(g){return g.status==='In Progress';});var open=myG.filter(function(g){return g.status==='Open';});var resolved=myG.filter(function(g){return g.status==='Resolved';});sdjAgentFlow([{delay:500,fn:function(){appendSdjAgentStep('🔍','Querying Database','Scanning GRMS for grievances by <strong>'+(currentUser?escHtml(currentUser.name):'you')+'</strong>...');}},{delay:700,fn:function(){appendSdjAgentStep('📊','Analyzing Status','Found <strong>'+myG.length+' case(s)</strong>. Checking statuses...');}},{delay:600,fn:function(){if(myG.length===0){appendSdjResult('No grievances found yet.<br><button class="agent-action-btn" onclick="showPage(\'file\');toggleSDJ();">📝 File First Grievance</button>');return;}appendSdjDataTable(['ID','Category','Priority','Status'],myG.map(function(g){return[g.id,g.category.split(' ')[0],g.priority,statusBadge(g.status)];}),myG.length+' Grievances Found');}},{delay:700,fn:function(){if(!myG.length)return;var insights=[];if(inProg.length)insights.push('🔄 <strong>'+inProg.length+' case(s)</strong> under active investigation');if(open.length)insights.push('⏳ <strong>'+open.length+' case(s)</strong> awaiting assignment');if(resolved.length)insights.push('✅ <strong>'+resolved.length+' case(s)</strong> successfully resolved');if(insights.length)appendSdjInsight('<strong>⚡ AI Analysis</strong><br><br>'+insights.join('<br>'));}}],function(){appendMsg('sdj','bot','<button class="agent-action-btn" onclick="showPage(\'track\');toggleSDJ();">🔍 Track Cases</button><button class="agent-action-btn secondary" onclick="showPage(\'file\');toggleSDJ();">📝 File New</button>');});}
+
+function sdjFlowAnalytics(){var total=grievances.length,resolved=grievances.filter(function(g){return g.status==='Resolved';}).length,inProg=grievances.filter(function(g){return g.status==='In Progress';}).length,open=grievances.filter(function(g){return g.status==='Open';}).length,critical=grievances.filter(function(g){return g.priority==='Critical'&&g.status!=='Resolved';}).length,withFiles=grievances.filter(function(g){return g.files&&g.files.length>0;}).length;sdjAgentFlow([{delay:500,fn:function(){appendSdjAgentStep('🔍','Querying Records','Aggregating data across '+total+' grievances...');}},{delay:700,fn:function(){appendSdjDataTable(['Metric','Value','Insight'],[['Total','<strong>'+total+'</strong>','System-wide'],['Resolved','<strong style="color:var(--green);">'+(Math.round(resolved/total*100))+'%</strong>',resolved+' cases'],['In Progress','<strong style="color:#5b47d5;">'+inProg+'</strong>','Active'],['Pending','<strong style="color:var(--amber);">'+open+'</strong>','Awaiting'],['Critical Active','<strong style="color:var(--red);">'+critical+'</strong>','Urgent'],['With Files','<strong style="color:var(--teal);">'+withFiles+'</strong>',Math.round(withFiles/total*100)+'%']],'Live Analytics');}}],function(){appendMsg('sdj','bot','<button class="agent-action-btn" onclick="showPage(\'reports\');toggleSDJ();">📊 Full Reports</button>');});}
+
+function sdjFlowDraft(topic){var topicClean=topic.replace(/draft|write.*complaint|help.*write|compose/gi,'').replace(/about|for|regarding/gi,'').trim()||'your issue';sdjAgentFlow([{delay:500,fn:function(){appendSdjAgentStep('🧠','Analyzing Issue','"'+escHtml(topicClean)+'"...');}},{delay:700,fn:function(){appendSdjAgentStep('✍️','Generating Draft','Building structured complaint...');}}],function(){var cat='Infrastructure',priority='Normal';if(/water|electric|hostel/i.test(topicClean)){cat='Hostel & Accommodation';priority='Urgent';}if(/fee|scholarship/i.test(topicClean)){cat='Fees & Finance';priority='Critical';}if(/ragging|harass/i.test(topicClean)){cat='Ragging / Harassment';priority='Critical';}var html='<div style="background:var(--purple-faint);border:1.5px solid rgba(124,58,237,.2);border-radius:12px;padding:14px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--purple);margin-bottom:10px;">✍️ Draft Complaint</div><div style="font-size:12px;display:grid;gap:6px;"><div><strong>Category:</strong> '+cat+'</div><div><strong>Priority:</strong> '+priorityBadge(priority)+'</div><div style="margin-top:6px;padding:10px;background:white;border-radius:8px;font-size:12px;line-height:1.6;"><strong>Description draft:</strong><br><br>I am formally reporting an issue concerning <em>'+escHtml(topicClean)+'</em>. This began on [DATE] and has not been resolved despite [prior attempts]. Located at [LOCATION], it impacts [describe impact]. I request immediate corrective action and have attached supporting evidence.</div><small style="color:var(--text-muted);">Fill in the [placeholders] with specific details.</small></div><button class="agent-action-btn" style="margin-top:10px;" onclick="showPage(\'file\');toggleSDJ();">📝 File This Grievance</button></div>';var msgs=document.getElementById('sdjMessages');var wrap=document.createElement('div');wrap.className='chat-msg bot';wrap.style.maxWidth='99%';wrap.innerHTML='<div class="msg-avatar sdj-msg-av">⚡</div>'+html;msgs.appendChild(wrap);msgs.scrollTop=99999;});}
+
+function sdjSend(){
+  if(sdjBusy)return;
+  var inp=document.getElementById('sdjInput'),raw=inp.value.trim();
+  if(!raw)return;
+  inp.value='';inp.style.height='auto';
+  document.getElementById('sdjChips').style.display='none';
+  appendMsg('sdj','user',escHtml(raw));
+  sdjBusy=true;document.getElementById('sdjSendBtn').disabled=true;
+  var t=raw.toLowerCase();
+  sleep(rnd(400,800)).then(function(){
+    try{
+      removeTyping('');
+      if(/my (grievan|case|complaint)|show.*my.*case/i.test(t)){sdjFlowMyGrievances();return;}
+      if(/(analytic|statistic|summary|overview|dashboard|insight|report)/i.test(t)){sdjFlowAnalytics();return;}
+      if(/(draft|write.*complaint|compose.*complaint)/i.test(t)){sdjFlowDraft(raw);return;}
+      if(isMathQuery(raw)){var calc=safeCalc(extractMathExpr(raw));if(calc){appendSdjCalcCard(calc);sdjBusy=false;document.getElementById('sdjSendBtn').disabled=false;return;}}
+      var kbReply=getKbResponse(raw);
+      if(kbReply){if(kbReply.indexOf('__CALC__:')===0){appendSdjCalcCard(JSON.parse(kbReply.slice(9)));}else{appendMsg('sdj','bot',fmtReply(kbReply));}sdjBusy=false;document.getElementById('sdjSendBtn').disabled=false;return;}
+      appendMsg('sdj','bot',fmtReply('⚡ I can help with:\n\n- 📊 **"Show my grievances"** — live status\n- 📈 **"Dashboard overview"** — analytics\n- ✍️ **"Draft a complaint about [topic]"**\n- 🔢 Math calculations\n\nOr ask any GRMS question! 🙏'));
+      sdjBusy=false;document.getElementById('sdjSendBtn').disabled=false;
+    }catch(err){appendMsg('sdj','bot','Sorry, an error occurred. Please try again! 🙏');sdjBusy=false;document.getElementById('sdjSendBtn').disabled=false;}
+  });
+}
+
+function appendSdjCalcCard(result){var msgs=document.getElementById('sdjMessages');var wrap=document.createElement('div');wrap.className='chat-msg bot';wrap.style.maxWidth='96%';var noteHtml=result.note?'<div class="calc-result-expr" style="margin-top:4px;">'+escHtml(result.note)+'</div>':'';wrap.innerHTML='<div class="msg-avatar sdj-msg-av">⚡</div><div class="calc-result-card"><div class="calc-result-label">🔢 Calculator · Result</div><div class="calc-result-value">= '+escHtml(String(result.result))+'</div><div class="calc-result-expr">'+escHtml(result.expression||result.expr)+'</div>'+noteHtml+'</div>';msgs.appendChild(wrap);msgs.scrollTop=99999;}
+
+/* ══ SHARED CHAT UTILITIES ══ */
+function appendMsg(bot,role,html){
+  var msgs=document.getElementById(bot+'Messages');
+  var isBot=role==='bot';
+  var avClass=bot==='dj'?'dj-msg-av':'sdj-msg-av';
+  var bubClass=role==='user'?(bot==='dj'?'dj-user-bubble':'sdj-user-bubble'):'';
+  var initials=isBot?(bot==='dj'?'DJ':'⚡'):(currentUser?currentUser.name[0]:'U');
+  var timeStr=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+
+  var wrap=document.createElement('div');
+  wrap.className='chat-msg '+(isBot?'bot':'user');
+
+  var av=document.createElement('div');
+  av.className='msg-avatar '+(isBot?avClass:'');
+  av.textContent=initials;
+
+  var bub=document.createElement('div');
+  bub.className='bubble '+bubClass;
+
+  // Build meta row (time + ticks)
+  var metaHtml='<div class="msg-meta"><span class="msg-time">'+timeStr+'</span>';
+  if(!isBot){var tickId='tick-'+Date.now()+'-'+Math.random().toString(36).slice(2);metaHtml+='<span class="ticks" id="'+tickId+'">✓✓</span>';}
+  metaHtml+='</div>';
+
+  bub.innerHTML=html+metaHtml;
+
+  wrap.appendChild(av);
+  wrap.appendChild(bub);
+  msgs.appendChild(wrap);
+  msgs.scrollTop=99999;
+
+  // Simulate "read" — turn ticks blue after a short random delay
+  if(!isBot){
+    var delay=rnd(800,1600);
+    setTimeout(function(){
+      var el=document.getElementById(tickId);
+      if(el)el.classList.add('read');
+    },delay);
+  }
+}
+function appendTyping(bot){var msgs=document.getElementById(bot+'Messages');var id='t'+Date.now();var avClass=bot==='dj'?'dj-msg-av':'sdj-msg-av';var dc=bot==='dj'?'var(--slate-light)':'#a78bfa';var div=document.createElement('div');div.className='chat-msg bot';div.id=id;div.innerHTML='<div class="msg-avatar '+avClass+'">'+(bot==='dj'?'DJ':'⚡')+'</div><div class="typing-dots"><span style="background:'+dc+'"></span><span style="background:'+dc+'"></span><span style="background:'+dc+'"></span></div>';msgs.appendChild(div);msgs.scrollTop=99999;return id;}
+function removeTyping(id){var el=document.getElementById(id);if(el)el.parentNode.removeChild(el);}
+function fmtReply(t){try{var h=escHtml(t);h=h.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');h=h.replace(/`([^`]+)`/g,'<code>$1</code>');h=h.replace(/^(\d+)\.\s+(.+)$/gm,'<li>$2</li>');h=h.replace(/^[-•]\s+(.+)$/gm,'<li>$1</li>');h=h.replace(/((<li>.*<\/li>\s*)+)/g,function(m){return'<ul>'+m+'</ul>';});h=h.replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');return h;}catch(e){return String(t);}}
+function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function statusBadge(s){var m={Open:'open','In Progress':'inprogress',Resolved:'resolved',Rejected:'rejected',Pending:'pending'};return'<span class="badge badge-'+(m[s]||'pending')+'">'+s+'</span>';}
+function priorityBadge(p){if(p==='Normal')return'<span style="font-size:12px;color:var(--text-muted);">Normal</span>';if(p==='Urgent')return'<span class="badge badge-pending">Urgent</span>';if(p==='Critical')return'<span class="badge badge-rejected">Critical</span>';return escHtml(p);}
+var _tt;
+function toast(msg,icon){icon=icon||'✓';var el=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;el.querySelector('.ticon').textContent=icon;el.classList.add('show');clearTimeout(_tt);_tt=setTimeout(function(){el.classList.remove('show');},3500);}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,80)+'px';}
+
+/* ══ INIT ══ */
+document.addEventListener('DOMContentLoaded', function() {
+  buildSbDots();
+  sbGoTo(0);
+
+  var sb = document.getElementById('djSlideSidebar');
+  var tab = document.getElementById('sbToggleTab');
+  tab.style.right = sb.offsetWidth + 'px';
+
+  document.getElementById('djCloseBtn').addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (djOpen) toggleDJ();
+  });
+  document.getElementById('sdjCloseBtn').addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (sdjOpen) toggleSDJ();
+  });
+
+  loadSavedCredentials();
+});
+</script>
+</body>
+</html>
