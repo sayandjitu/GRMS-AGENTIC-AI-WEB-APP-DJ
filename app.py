@@ -87,7 +87,7 @@ def init_db():
 
 @app.route('/')
 def serve_index():
-    return send_from_directory(BASE_DIR, 'GRMS PPD Date and Time new Amazing Version.html')
+    return send_from_directory(BASE_DIR, 'GRMS PPD Date and Time new Amazing Version 2.html')
 
 # Endpoints
 @app.route('/api/login', methods=['POST'])
